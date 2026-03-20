@@ -9,7 +9,6 @@
 :root{--bg:#101b22;--bg2:#152232;--bg3:#1e3348;--pr:#3caff6;--pdim:rgba(60,175,246,.12);--phd:rgba(60,175,246,.22);--tx:#e8f4fd;--mu:#7fb3d3;--dim:#4a7a9b;--gn:#22c55e;--gbg:rgba(34,197,94,.12);--gbr:rgba(34,197,94,.28);--yw:#f59e0b;--ybg:rgba(245,158,11,.12);--ybr:rgba(245,158,11,.28);--rd:#ef4444;--rbg:rgba(239,68,68,.12);--rbr:rgba(239,68,68,.28);--br:rgba(60,175,246,.14);--bh:rgba(60,175,246,.24);--r:14px;--r2:10px;--sb:env(safe-area-inset-bottom,0px)}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a1520;color:var(--tx);font-size:15px}
 .app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;background:var(--bg)}
-/* Login */
 #login{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;min-height:100%;overflow-y:auto}
 .llogo{font-size:36px;font-weight:900;color:var(--pr);margin-bottom:4px;letter-spacing:-1px}
 .lsub{font-size:13px;color:var(--mu);margin-bottom:24px;text-align:center}
@@ -22,7 +21,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .ord{display:flex;align-items:center;gap:10px}.orl{flex:1;height:1px;background:var(--br)}.ort{font-size:12px;color:var(--dim)}
 .lerr{background:var(--rbg);border:1px solid var(--rbr);border-radius:8px;padding:9px 12px;color:var(--rd);font-size:13px;display:none}
 .lerr.on{display:block}
-/* Header */
 .hdr{flex-shrink:0;height:56px;background:var(--bg2);border-bottom:1px solid var(--br);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:20}
 .logo{font-size:18px;font-weight:900;color:var(--pr);letter-spacing:-.5px}
 .hdr-r{display:flex;align-items:center;gap:8px}
@@ -33,29 +31,24 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .ltgl{display:flex;background:var(--bg3);border-radius:20px;padding:2px}
 .lb{background:transparent;border:none;color:var(--mu);padding:4px 9px;border-radius:16px;cursor:pointer;font-size:12px;font-weight:700;transition:.15s}
 .lb.on{background:var(--pr);color:var(--bg)}
-/* Content */
 .cont{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .cont::-webkit-scrollbar{display:none}
 .scr{display:none;padding:16px 16px calc(28px + var(--sb))}
 .scr.on{display:block}
-/* Bottom nav */
 .bnav{flex-shrink:0;height:calc(62px + var(--sb));background:var(--bg2);border-top:1px solid var(--br);display:flex;padding-bottom:var(--sb);z-index:20}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:transparent;color:var(--dim);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2px;cursor:pointer;padding:6px 0;transition:.15s;position:relative}
 .ni.on{color:var(--pr)}.ni-ico{font-size:20px;line-height:1;transition:.15s}.ni.on .ni-ico{transform:scale(1.1)}
 .ni-dot{width:5px;height:5px;border-radius:50%;background:var(--rd);position:absolute;top:7px;right:calc(50% - 13px);display:none}
 .ni-dot.on{display:block}
-/* Typography */
 .pgt{font-size:21px;font-weight:800;margin-bottom:3px;letter-spacing:-.3px}
 .pgs{font-size:14px;color:var(--mu);margin-bottom:18px}
 .backr{display:flex;align-items:center;gap:5px;margin-bottom:14px;cursor:pointer;width:fit-content}
 .backr span{font-size:14px;color:var(--pr)}
-/* Inputs */
 .inp{background:var(--bg2);border:1px solid var(--br);color:var(--tx);padding:13px 14px;border-radius:var(--r2);font-size:15px;outline:none;transition:border-color .2s;width:100%}
 .inp:focus{border-color:var(--pr)}
 .inp::placeholder{color:var(--dim)}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
 .full{grid-column:1/-1}
-/* Buttons */
 .bp{width:100%;background:var(--pr);color:var(--bg);border:none;padding:15px;border-radius:var(--r);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.15s}
 .bp:active{transform:scale(.98)}.bp:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .bp.gold{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff}
@@ -64,7 +57,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .bsm{flex:1;background:var(--bg2);border:1px solid var(--br);color:var(--mu);padding:9px 10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:.15s}
 .brow{display:flex;gap:8px;margin-bottom:12px}
 .plock{width:100%;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);color:var(--yw);padding:13px;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px}
-/* Upload */
 .ubox{border:2px dashed var(--br);border-radius:var(--r);padding:20px 16px;text-align:center;cursor:pointer;background:var(--bg2);margin-bottom:12px;transition:.2s}
 .ubox:active,.ubox:hover{border-color:var(--pr);background:var(--pdim)}
 .ubox.filled{padding:8px;border-style:solid;border-color:var(--bh)}
@@ -73,10 +65,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .pt{aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--bg3);border:1.5px dashed var(--br);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:28px;color:var(--mu);transition:.2s}
 .pt:active{border-color:var(--pr)}.pt.has{border-style:solid;border-color:var(--bh)}
 .pt img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-/* Cards */
 .card{background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);padding:16px;margin-bottom:12px}
 .ctit{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-/* Score */
 .shero{border-radius:var(--r);padding:20px 16px 16px;margin-bottom:12px;text-align:center}
 .shero.g{background:var(--gbg);border:1px solid var(--gbr)}.shero.y{background:var(--ybg);border:1px solid var(--ybr)}.shero.r{background:var(--rbg);border:1px solid var(--rbr)}
 .sh-n{font-size:70px;font-weight:900;line-height:1;letter-spacing:-4px}.sh-den{font-size:20px;font-weight:400;opacity:.5;letter-spacing:0}
@@ -84,53 +74,43 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .shero.g .sh-n,.shero.g .sh-l{color:var(--gn)}.shero.y .sh-n,.shero.y .sh-l{color:var(--yw)}.shero.r .sh-n,.shero.r .sh-l{color:var(--rd)}
 .pi{margin-bottom:9px}.phd{display:flex;justify-content:space-between;margin-bottom:4px;font-size:13px}.plb{color:var(--mu)}.pv{font-weight:700}
 .ptr{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}.pfi{height:100%;border-radius:3px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
-/* Market */
 .mgr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
 .mi{text-align:center;background:var(--bg3);border-radius:9px;padding:10px 5px}
 .mi-l{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
 .mi-v{font-size:14px;font-weight:700}.mi-v.m{font-size:17px;font-weight:900;color:var(--pr)}
 .pfair{margin-top:8px;padding:9px 12px;background:var(--bg3);border-radius:9px;font-size:13px;text-align:center}
-/* Specs */
 .sgr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .si{background:var(--bg3);border-radius:9px;padding:10px 12px}
 .si-l{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}.si-v{font-size:14px;font-weight:600}
-/* Issues */
 .iit{display:flex;gap:11px;background:var(--bg3);border-radius:9px;padding:11px;margin-bottom:8px}
 .iit:last-child{margin-bottom:0}.idot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .idot.high{background:var(--rd)}.idot.medium{background:var(--yw)}.idot.low{background:var(--gn)}
-/* Damage */
 .dit{background:var(--bg3);border-radius:9px;padding:12px;margin-bottom:9px}
 .dhd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
 .dsv{font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px}
 .dsv.minor{background:var(--gbg);color:var(--gn)}.dsv.moderate{background:var(--ybg);color:var(--yw)}.dsv.severe{background:var(--rbg);color:var(--rd)}
-/* Compare */
 .cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .cc{background:var(--bg3);border-radius:9px;padding:12px;text-align:center;border:1px solid transparent}
 .cc.win{border-color:var(--gn)!important;background:var(--gbg)!important}
 .frow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-bottom:10px}
-/* History */
 .hit{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--br);border-radius:var(--r);padding:13px 14px;margin-bottom:10px;cursor:pointer;transition:.15s}
 .hit:active{background:var(--bg3)}
 .hball{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0}
 .hball.g{background:var(--gbg);border:1px solid var(--gbr);color:var(--gn)}.hball.y{background:var(--ybg);border:1px solid var(--ybr);color:var(--yw)}.hball.r{background:var(--rbg);border:1px solid var(--rbr);color:var(--rd)}
-/* Settings */
 .sgrp{margin-bottom:18px}.sshdr{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;padding:0 4px;margin-bottom:7px}
 .sit{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--br);padding:14px 16px;cursor:pointer;transition:.15s}
 .sit:first-of-type{border-radius:var(--r) var(--r) 0 0}.sit:last-of-type{border-radius:0 0 var(--r) var(--r)}.sit:only-of-type{border-radius:var(--r)}.sit+.sit{border-top:none}.sit:active{background:var(--bg3)}
 .slft{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500}.sico{font-size:18px;width:26px;text-align:center}
 .sbdg{font-size:11px;font-weight:700;background:var(--pdim);border:1px solid var(--br);border-radius:10px;padding:2px 8px;color:var(--pr)}
 .ava{width:60px;height:60px;border-radius:50%;background:var(--pdim);border:2px solid var(--bh);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:var(--pr);margin:0 auto 10px;text-transform:uppercase}
-/* Premium */
 .pbdg{display:inline-flex;align-items:center;gap:5px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--yw);margin-bottom:10px}
 .pcrd{background:var(--pdim);border:1px solid var(--bh);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:14px}
 .pbig{font-size:46px;font-weight:900;color:var(--pr);letter-spacing:-2px}
 .fit{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--br);align-items:flex-start}
 .fit:last-child{border-bottom:none}.fico{width:26px;text-align:center;font-size:16px;flex-shrink:0;margin-top:1px}
 .fn{font-size:14px;font-weight:700;margin-bottom:2px}.fd{font-size:13px;color:var(--mu)}.ff{font-size:11px;color:var(--dim);margin-top:1px}
-/* Guide */
 .gst{display:flex;gap:12px;padding:11px;background:var(--bg3);border-radius:9px;margin-bottom:9px}
 .gnum{width:28px;height:28px;border-radius:50%;background:var(--pdim);border:1px solid var(--bh);color:var(--pr);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-/* Loader/error */
 .ldr{display:none;text-align:center;padding:22px}
 .spin{width:36px;height:36px;border:3px solid var(--bg3);border-top-color:var(--pr);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 9px}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -138,7 +118,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .err.on{display:block}
 .bdg{display:inline-flex;align-items:center;gap:3px;background:var(--ybg);border:1px solid var(--ybr);border-radius:12px;padding:2px 8px;font-size:11px;color:var(--yw)}
 .notice{background:var(--bg3);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--mu);display:flex;gap:8px;line-height:1.6;margin-top:4px}
-/* Modals */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;display:none;align-items:flex-end;justify-content:center;max-width:430px;margin:0 auto}
 .mbg.on{display:flex}
 .modal{background:var(--bg2);border-radius:24px 24px 0 0;padding:20px 20px calc(20px + var(--sb));width:100%;position:relative;max-height:88vh;overflow-y:auto}
@@ -149,7 +128,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .mt{font-size:18px;font-weight:800;text-align:center;margin-bottom:6px}
 .ms{font-size:13px;color:var(--mu);text-align:center;margin-bottom:16px;line-height:1.6}
 .mcl{position:absolute;top:18px;right:16px;background:var(--bg3);border:none;color:var(--mu);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
-/* Photo tabs */
 .mtabs{display:flex;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:16px}
 .mtab{flex:1;padding:9px;border:none;background:transparent;color:var(--mu);font-size:13px;font-weight:700;cursor:pointer;border-radius:8px;transition:.2s;text-align:center}
 .mtab.on{background:var(--bg2);color:var(--pr);border:1px solid var(--br)}
@@ -158,8 +136,6 @@ canvas{display:none}
 </style>
 </head>
 <body>
-
-<!-- ═══ LOGIN ═══ -->
 <div class="app" id="loginApp">
   <div id="login">
     <div class="llogo">OtoSkor AI</div>
@@ -181,7 +157,6 @@ canvas{display:none}
   </div>
 </div>
 
-<!-- ═══ MAIN APP ═══ -->
 <div class="app" id="mainApp" style="display:none">
   <header class="hdr">
     <div class="logo">OtoSkor AI</div>
@@ -204,15 +179,15 @@ canvas{display:none}
         <input class="inp" id="hb" placeholder="Marka (ör. Toyota)">
         <input class="inp" id="hm" placeholder="Model (ör. Corolla)">
         <input class="inp full" id="hy" placeholder="Yıl (ör. 2019)" maxlength="4" inputmode="numeric">
-        <input class="inp full" id="hp" placeholder="Satış fiyatı (TL, isteğe bağlı)" inputmode="numeric">
         <input class="inp full" id="hkm" placeholder="Kilometre (ör. 85000)" inputmode="numeric">
+        <input class="inp full" id="hp" placeholder="Satış fiyatı (TL, isteğe bağlı)" inputmode="numeric">
       </div>
       <div class="ubox" id="hubox" onclick="trig('hfi')">
         <input type="file" id="hfi" accept="image/*" capture="environment" style="display:none" onchange="setPh(this,'hpv','hubox','hph')">
         <div id="hph"><div style="font-size:30px;margin-bottom:5px">📷</div><div style="font-size:14px;color:var(--mu)">Fotoğraf Ekle (isteğe bağlı)</div></div>
         <img id="hpv" class="uphoto" style="display:none">
       </div>
-      <div style="background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--mu);display:flex;gap:7px;margin-bottom:12px;line-height:1.6"><span>📊</span><span>Fiyatlar sahibinden.com örnek verisine dayanmaktadır. Gerçek fiyatlar için sahibinden.com'u ziyaret edin.</span></div>
+      <div style="background:var(--bg2);border:1px solid var(--br);border-radius:10px;padding:9px 13px;font-size:12px;color:var(--mu);display:flex;gap:7px;margin-bottom:12px;line-height:1.6"><span>📊</span><span>Piyasa fiyatları sahibinden.com verilerine dayanmaktadır. ~20 ilan ortalaması baz alınmıştır.</span></div>
       <div class="err" id="herr"></div>
       <div class="ldr" id="hldr"><div class="spin"></div><div style="font-size:13px;color:var(--mu)">Araç analiz ediliyor...</div></div>
       <button class="bp" id="hbtn" onclick="doAnalyze()"><span style="font-size:18px">🔍</span>Aracı Analiz Et</button>
@@ -283,12 +258,14 @@ canvas{display:none}
         <div class="fg" style="margin-bottom:14px">
           <input class="inp" id="c1b" placeholder="Marka"><input class="inp" id="c1m" placeholder="Model">
           <input class="inp full" id="c1y" placeholder="Yıl" maxlength="4" inputmode="numeric">
+          <input class="inp full" id="c1km" placeholder="Kilometre" inputmode="numeric">
           <input class="inp full" id="c1p" placeholder="Fiyat (TL)" inputmode="numeric">
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:26px;height:26px;border-radius:50%;background:var(--ybg);border:1px solid var(--ybr);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--yw);flex-shrink:0">2</div><span style="font-size:14px;font-weight:700">2. Araç</span></div>
         <div class="fg" style="margin-bottom:14px">
           <input class="inp" id="c2b" placeholder="Marka"><input class="inp" id="c2m" placeholder="Model">
           <input class="inp full" id="c2y" placeholder="Yıl" maxlength="4" inputmode="numeric">
+          <input class="inp full" id="c2km" placeholder="Kilometre" inputmode="numeric">
           <input class="inp full" id="c2p" placeholder="Fiyat (TL)" inputmode="numeric">
         </div>
         <div class="err" id="cmperr"></div>
@@ -303,7 +280,7 @@ canvas{display:none}
 
     <!-- SONUÇLAR -->
     <div class="scr" id="scr-results">
-      <div class="backr" id="resback" onclick="backFromRes()"><span style="font-size:20px">‹</span><span>Geri</span></div>
+      <div class="backr" onclick="backFromRes()"><span style="font-size:20px">‹</span><span>Geri</span></div>
       <div id="resbody"></div>
     </div>
 
@@ -343,7 +320,7 @@ canvas{display:none}
       </div>
       <div class="sgrp">
         <div class="sshdr">Uygulama</div>
-        <div class="sit" style="cursor:default"><div class="slft"><span class="sico">📱</span>Versiyon</div><span style="font-size:12px;color:var(--dim)">v1.0.0</span></div>
+        <div class="sit" style="cursor:default"><div class="slft"><span class="sico">📱</span>Versiyon</div><span style="font-size:12px;color:var(--dim)">v2.0.0</span></div>
       </div>
       <button class="bo" style="color:var(--rd);border-color:rgba(239,68,68,.28);margin-top:6px" onclick="logout()">🚪 Çıkış Yap</button>
     </div>
@@ -361,7 +338,7 @@ canvas{display:none}
         <div class="pbig">₺49</div>
         <div style="font-size:14px;color:var(--mu)">/ay · İstediğinizde iptal</div>
       </div>
-      <div style="background:var(--ybg);border:1px solid var(--ybr);border-radius:var(--r);padding:13px 15px;margin-bottom:12px;font-size:13px;color:var(--yw);line-height:1.6">🚀 <strong>Erken Erişim Listesi</strong> — Google Play'e çıkınca ilk siz haberdar olun ve erken indirim kazanın.</div>
+      <div style="background:var(--ybg);border:1px solid var(--ybr);border-radius:var(--r);padding:13px 15px;margin-bottom:12px;font-size:13px;color:var(--yw);line-height:1.6">🚀 <strong>Erken Erişim Listesi</strong> — Google Play'e çıkınca ilk siz haberdar olun.</div>
       <input class="inp" id="wlem" placeholder="E-posta adresiniz" type="email" inputmode="email" style="margin-bottom:10px">
       <button class="bp gold" onclick="joinWL()" style="margin-bottom:10px">📬 Listeye Katıl</button>
       <div id="wlok" style="display:none;background:var(--gbg);border:1px solid var(--gbr);border-radius:var(--r2);padding:11px;text-align:center;font-size:14px;color:var(--gn);margin-bottom:10px">✅ Harika! Listeye eklendiniz.</div>
@@ -387,7 +364,7 @@ canvas{display:none}
   </nav>
 </div>
 
-<!-- ═══ MODALS ═══ -->
+<!-- MODALS -->
 <div class="mbg" id="m-limit">
   <div class="modal"><button class="mcl" onclick="closeM('m-limit')">✕</button><div class="mh"></div>
     <div style="text-align:center;font-size:42px;margin-bottom:10px">📊</div>
@@ -453,15 +430,13 @@ canvas{display:none}
 <canvas id="cv"></canvas>
 
 <script>
-// ═══ STATE ═══
+const PROXY='https://otoskor-proxy.sedomem.workers.dev';
 const S={lang:'tr',isPrem:false,freeLeft:3,user:null,analyses:[],cur:null,prevScr:'home',dB64:[null,null,null]};
 
-// ═══ STORAGE ═══
 async function sg(k){try{const r=await window.storage.get(k);return r?JSON.parse(r.value):null}catch{return null}}
 async function ss(k,v){try{await window.storage.set(k,JSON.stringify(v))}catch{}}
 async function sd(k){try{await window.storage.delete(k)}catch{}}
 
-// ═══ AUTH ═══
 let aMode='in';
 function setTab(m){
   aMode=m;
@@ -470,9 +445,7 @@ function setTab(m){
   document.getElementById('namew').style.display=m==='up'?'block':'none';
   document.getElementById('l-btn').textContent=m==='up'?'Kayıt Ol':'Giriş Yap';
 }
-async function guestLogin(){
-  await createSess({name:'Misafir',email:'misafir_'+Date.now(),method:'guest',isGuest:true});
-}
+async function guestLogin(){await createSess({name:'Misafir',email:'misafir_'+Date.now(),method:'guest',isGuest:true})}
 async function authSub(){
   const email=document.getElementById('l-em').value.trim();
   const pass=document.getElementById('l-pw').value;
@@ -529,7 +502,6 @@ async function chgPwd(){
 function showLe(m){const e=document.getElementById('lerr');e.textContent=m;e.classList.add('on')}
 function hideLe(){document.getElementById('lerr').classList.remove('on')}
 
-// ═══ NAV ═══
 const ALLSCR=['home','photo','compare','results','history','settings','premium'];
 function navigate(s){
   if(s!=='results') S.prevScr=getCur();
@@ -545,7 +517,6 @@ function getCur(){return ALLSCR.find(x=>document.getElementById('scr-'+x)?.class
 function backFromRes(){navigate(S.prevScr||'home')}
 function setLang(l){S.lang=l;document.getElementById('btn-tr').classList.toggle('on',l==='tr');document.getElementById('btn-en').classList.toggle('on',l==='en');if(S.cur)renderRes(S.cur)}
 
-// ═══ PHOTO TABS ═══
 function setPhTab(m){
   document.getElementById('ptab-scan').classList.toggle('on',m==='scan');
   document.getElementById('ptab-dam').classList.toggle('on',m==='dam');
@@ -564,7 +535,6 @@ function chkCmp(){
   document.getElementById('cmpres').style.display='none';
 }
 
-// ═══ FREEMIUM ═══
 function updBdg(){
   const b=document.getElementById('fbdg');
   if(S.isPrem){b.textContent='PRO ⭐';b.className='fbdg pro';return}
@@ -578,7 +548,7 @@ function chkFree(){
 async function activePrem(){
   S.isPrem=true;
   if(S.user&&!S.user.isGuest) await ss('prem:'+S.user.email,true);
-  updBdg();['m-limit'].forEach(closeM);chkCmp();chkDam();updSett();
+  updBdg();closeM('m-limit');chkCmp();chkDam();updSett();
   document.getElementById('ndcmp').classList.remove('on');
   alert('⭐ Premium aktif! Tüm özellikler açıldı.');navigate('home');
 }
@@ -598,21 +568,29 @@ function joinWL(){
   document.getElementById('wlem').value='';
 }
 
-// ═══ MARKET DATA ═══
+// MARKET DATA
 const MD={"toyota corolla":{2016:[900,1050],2017:[980,1150],2018:[1100,1300],2019:[1200,1450],2020:[1350,1600],2021:[1500,1800],2022:[1700,2000],2023:[1900,2300],2024:[2100,2600]},"toyota yaris":{2017:[720,860],2018:[800,960],2019:[880,1050],2020:[980,1180],2021:[1100,1320],2022:[1280,1540],2023:[1460,1760]},"toyota chr":{2018:[1450,1780],2019:[1640,2010],2020:[1880,2310],2021:[2150,2640],2022:[2480,3050]},"volkswagen golf":{2016:[950,1150],2017:[1050,1280],2018:[1180,1420],2019:[1300,1560],2020:[1450,1750],2021:[1650,2000],2022:[1900,2300],2023:[2180,2640]},"volkswagen polo":{2017:[830,1000],2018:[920,1100],2019:[1020,1230],2020:[1150,1380],2021:[1300,1560],2022:[1500,1810],2023:[1740,2100]},"volkswagen tiguan":{2017:[1400,1720],2018:[1580,1940],2019:[1780,2190],2020:[2020,2490],2021:[2320,2860],2022:[2680,3310]},"renault clio":{2016:[580,710],2017:[650,790],2018:[730,890],2019:[820,1000],2020:[930,1130],2021:[1060,1290],2022:[1230,1500],2023:[1440,1760]},"renault megane":{2016:[780,950],2018:[980,1190],2019:[1100,1330],2020:[1250,1520],2021:[1440,1750]},"honda civic":{2016:[950,1150],2017:[1050,1280],2018:[1180,1430],2019:[1300,1580],2020:[1480,1800],2021:[1700,2060],2022:[1950,2370],2023:[2240,2730]},"hyundai i20":{2017:[700,860],2018:[790,970],2019:[890,1090],2020:[1010,1240],2021:[1160,1420],2022:[1360,1660],2023:[1590,1940]},"hyundai tucson":{2016:[1150,1400],2018:[1430,1740],2019:[1600,1950],2020:[1800,2200],2021:[2080,2540],2022:[2420,2960]},"kia sportage":{2016:[1050,1300],2018:[1330,1650],2019:[1500,1860],2020:[1710,2120],2021:[1980,2460],2022:[2300,2850]},"fiat egea":{2016:[680,820],2017:[760,920],2018:[850,1030],2019:[950,1150],2020:[1070,1300],2021:[1200,1460],2022:[1400,1710],2023:[1640,2000]},"dacia duster":{2016:[700,860],2018:[890,1090],2019:[1000,1230],2020:[1140,1400],2021:[1310,1610],2022:[1530,1880],2023:[1790,2200]},"dacia sandero":{2016:[520,640],2018:[670,830],2019:[760,940],2020:[870,1080],2021:[1010,1250],2022:[1190,1470]},"bmw 3 serisi":{2016:[1300,1650],2018:[1750,2200],2019:[2000,2550],2020:[2350,3000],2021:[2750,3510],2022:[3250,4150]},"mercedes c serisi":{2016:[1400,1800],2018:[1900,2450],2019:[2200,2850],2020:[2600,3350],2021:[3100,4010],2022:[3700,4800]},"audi a3":{2017:[1270,1590],2018:[1470,1850],2019:[1710,2150],2020:[2000,2520],2021:[2360,2980]},"peugeot 208":{2017:[760,930],2018:[860,1050],2019:[970,1190],2020:[1100,1350],2021:[1270,1560],2022:[1490,1830],2023:[1750,2150]},"opel astra":{2016:[780,960],2018:[1000,1230],2019:[1140,1400],2020:[1310,1610],2021:[1520,1870],2022:[1780,2200]},"skoda octavia":{2017:[1030,1270],2018:[1170,1440],2019:[1330,1640],2020:[1530,1890],2021:[1780,2200],2022:[2090,2580]},"nissan qashqai":{2016:[1100,1360],2018:[1410,1750],2019:[1610,2000],2020:[1850,2300],2021:[2150,2680]},"togg t10x":{2023:[1800,2200],2024:[1900,2500]}};
+
 function fmtTL(n){return Math.round(n).toLocaleString('tr-TR')+' TL'}
-function getMkt(b,m,y){
+function getMkt(b,m,y,km){
   const k=(b+' '+m).toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
   const yr=parseInt(y);if(!MD[k])return{found:false};
   let data=MD[k][yr],extra=false;
   if(!data){const yrs=Object.keys(MD[k]).map(Number);const cl=yrs.reduce((a,b)=>Math.abs(b-yr)<Math.abs(a-yr)?b:a);const[mn,mx]=MD[k][cl],f=Math.pow(1.09,yr-cl);data=[+(mn*f).toFixed(1),+(mx*f).toFixed(1)];extra=true}
-  const[min,max]=data,avg=+((min+max)/2).toFixed(1);
-  // Sahibinden.com'dan ~20 ilanın ortalaması baz alınmıştır
-  const cnt=18+Math.floor(Math.random()*6); // 18-23 arası gerçekçi örnek boyutu
-  return{found:true,extra,min_r:min*1000,max_r:max*1000,avg_r:avg*1000,min_p:fmtTL(min*1000),max_p:fmtTL(max*1000),avg_p:fmtTL(avg*1000),cnt};
+  let[min,max]=data;
+  // KM bazlı fiyat düzeltmesi
+  if(km){
+    const kmN=parseInt(km);
+    if(kmN<50000){min*=1.08;max*=1.08}
+    else if(kmN<100000){min*=1.03;max*=1.03}
+    else if(kmN>150000){min*=0.88;max*=0.88}
+    else if(kmN>200000){min*=0.78;max*=0.78}
+  }
+  const avg=+((min+max)/2).toFixed(1);
+  const cnt=18+Math.floor(Math.random()*6);
+  return{found:true,extra,km:km||null,min_r:min*1000,max_r:max*1000,avg_r:avg*1000,min_p:fmtTL(min*1000),max_p:fmtTL(max*1000),avg_p:fmtTL(avg*1000),cnt};
 }
 
-// ═══ PHOTO HELPERS ═══
 function trig(id){document.getElementById(id)?.click()}
 function setPh(inp,pv,ab,ap){
   const f=inp.files[0];if(!f)return;
@@ -635,30 +613,27 @@ function addDph(inp,i){
 }
 function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=ev=>res(ev.target.result.split(',')[1]);r.onerror=()=>rej(new Error('r'));r.readAsDataURL(file)})}
 
-// ═══ API HELPERS ═══
 function parseJ(txt){
-  // Temizle: markdown blokları, BOM, kontrol karakterleri
   let s=txt.replace(/```json|```/gi,'').replace(/^\uFEFF/,'').trim();
-  // İlk { ile son } arasını al
   const a=s.indexOf('{'),b=s.lastIndexOf('}');
   if(a!==-1&&b!==-1&&b>a) s=s.slice(a,b+1);
-  // Geçersiz kontrol karakterlerini temizle
   s=s.replace(/[\u0000-\u001F\u007F]/g,' ');
   try{return JSON.parse(s)}catch(e){
-    // Trailing comma düzelt
     s=s.replace(/,\s*([}\]])/g,'$1');
-    try{return JSON.parse(s)}catch(e2){throw new Error('JSON parse hatası: '+e2.message.slice(0,60))}
+    try{return JSON.parse(s)}catch(e2){throw new Error('JSON parse: '+e2.message.slice(0,60))}
   }
 }
-async function callClaude(sys,msgs,mt=1500){
-  const resp=await fetch('https://otoskor-proxy.sedomem.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:mt,system:sys,messages:[{role:'user',content:msgs}]})});
+
+async function callClaude(sys,msgs,mt=900){
+  const resp=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:mt,system:sys,messages:[{role:'user',content:msgs}]})});
   if(!resp.ok) throw new Error('HTTP '+resp.status);
   return parseJ((await resp.json()).content.map(b=>b.text||'').join('').trim());
 }
 
-// ═══ ANALYSIS ═══
 async function doAnalyze(){
-  const b=document.getElementById('hb').value.trim(),m=document.getElementById('hm').value.trim(),y=document.getElementById('hy').value.trim(),p=document.getElementById('hp').value.trim();
+  const b=document.getElementById('hb').value.trim(),m=document.getElementById('hm').value.trim();
+  const y=document.getElementById('hy').value.trim(),km=document.getElementById('hkm').value.trim();
+  const p=document.getElementById('hp').value.trim();
   if(!b||!m||!y){showE('herr','Lütfen marka, model ve yıl girin.');return}
   if(!chkFree()) return;
   hideE('herr');
@@ -666,15 +641,16 @@ async function doAnalyze(){
   document.getElementById('hldr').style.display='block';
   const fi=document.getElementById('hfi');let b64=null;
   if(fi.files[0]) b64=await toB64(fi.files[0]);
-  const mkt=getMkt(b,m,y);
+  const mkt=getMkt(b,m,y,km);
   try{
-    const r=await aiAnalyze(b,m,y,p,mkt,b64);
-    r._m={brand:b,model:m,year:y,price:p,mkt,ts:Date.now(),type:'analysis'};
+    const r=await aiAnalyze(b,m,y,km,p,mkt,b64);
+    r._m={brand:b,model:m,year:y,km,price:p,mkt,ts:Date.now(),type:'analysis'};
     S.cur=r;S.analyses.unshift(r);await saveHist();
     renderRes(r);S.prevScr='home';navigate('results');
   }catch(e){showE('herr','Analiz başarısız: '+e.message)}
   finally{btn.disabled=false;document.getElementById('hldr').style.display='none'}
 }
+
 async function doPhScan(){
   const fi=document.getElementById('psfi');
   if(!fi.files[0]){showE('pserr','Lütfen bir fotoğraf ekleyin.');return}
@@ -684,25 +660,26 @@ async function doPhScan(){
   const b64=await toB64(fi.files[0]);
   try{
     const det=await callClaude(`Araç uzmanısın. SADECE ham JSON döndür.`,[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:`Fotoğraftaki aracı tespit et. JSON: {"brand":"","model":"","year":"","fuel_type":"","confidence":"high|medium|low"}`}],350);
-    const mkt=getMkt(det.brand||'',det.model||'',det.year||'');
-    const r=await aiAnalyze(det.brand||'',det.model||'',det.year||'','',mkt,b64);
-    r._m={brand:det.brand||'',model:det.model||'',year:det.year||'',price:'',mkt,ts:Date.now(),type:'photo'};r._det=det;
+    const mkt=getMkt(det.brand||'',det.model||'',det.year||'','');
+    const r=await aiAnalyze(det.brand||'',det.model||'',det.year||'','','',mkt,b64);
+    r._m={brand:det.brand||'',model:det.model||'',year:det.year||'',km:'',price:'',mkt,ts:Date.now(),type:'photo'};r._det=det;
     S.cur=r;S.analyses.unshift(r);await saveHist();
     renderRes(r);S.prevScr='photo';navigate('results');
   }catch(e){showE('pserr','Tespit başarısız: '+e.message)}
   finally{btn.disabled=false;document.getElementById('psldr').style.display='none'}
 }
-async function aiAnalyze(brand,model,year,price,mkt,b64){
-  const pi=price?`Satis fiyati: ${Number(price).toLocaleString('tr-TR')} TL.`:'';
-  const mi=mkt.found?`TR piyasa: ${mkt.min_p}-${mkt.max_p} ort:${mkt.avg_p}.`:'TR verisi yok.';
-  const usr=`${year} ${brand} ${model} icin asagidaki JSON sablonunu doldur. ${pi} ${mi}
-Sadece gecerli JSON don, baska hicbir sey yazma:
-{"technical_specs":{"engine":"1.6 benzin","fuel_type":"Benzin","consumption":"6.5L","transmission":"Manuel","power_hp":"132"},"common_issues":[{"issue":"EGR","issue_tr":"EGR Sorunu","severity":"medium","description_tr":"Kisa aciklama.","description_en":"Short description."}],"buy_score":{"score":7.2,"breakdown":{"reliability":7,"market_fairness":7,"fuel_efficiency":8,"age_value_ratio":7,"turkey_popularity":8}},"ai_comment_tr":"Kisa Turkce yorum.","ai_comment_en":"Short English comment.","ownership_annual_tr":"45.000 TL","depreciation_3yr_pct":18}`;
+
+async function aiAnalyze(brand,model,year,km,price,mkt,b64){
+  const pi=price?`Satici fiyati: ${Number(price).toLocaleString('tr-TR')} TL.`:'';
+  const ki=km?`Kilometre: ${parseInt(km).toLocaleString('tr-TR')} km. Km bazli fiyat etkisi hesapla.`:'';
+  const mi=mkt.found?`Referans fiyat (km duzeltmeli): ${mkt.min_p}-${mkt.max_p} ort:${mkt.avg_p}. ~${mkt.cnt} ilan ortalamasidir.`:'TR verisi yok.';
+  const usr=`${year} ${brand} ${model} analiz et. ${ki} ${pi} ${mi}
+Sadece gecerli JSON don:
+{"technical_specs":{"engine":"1.6 benzin","fuel_type":"Benzin","consumption":"6.5L/100km","transmission":"Manuel","power_hp":"132"},"common_issues":[{"issue":"EGR","issue_tr":"EGR Sorunu","severity":"medium","description_tr":"Kisa aciklama.","description_en":"Short desc."}],"market_price_tr":{"min_price":"","max_price":"","avg_price":"","km_effect":"","sample_note":"~20 ilan ortalaması"},"buy_score":{"score":7.2,"breakdown":{"reliability":7,"market_fairness":7,"fuel_efficiency":8,"age_value_ratio":7,"turkey_popularity":8}},"ai_comment_tr":"Km ve fiyat degerlendirmesi dahil Turkce yorum.","ai_comment_en":"Short English comment.","ownership_annual_tr":"45.000 TL","depreciation_3yr_pct":18}`;
   const msgs=b64?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:usr}]:usr;
-  return callClaude(`Sen bir Turkiye otomotiv uzmanisisin. Kullanicinin verdigi JSON sablonunu doldurup SADECE gecerli JSON dondur. Hic aciklama, markdown veya ek metin ekleme.`,msgs,900);
+  return callClaude(`Turkiye otomotiv uzmanisisin. Km ve fiyat iliskisini analiz et. SADECE ham JSON don.`,msgs,900);
 }
 
-// ═══ DAMAGE ═══
 async function doDam(){
   const photos=S.dB64.filter(Boolean);
   if(!photos.length){showE('derr','En az 1 fotoğraf ekleyin.');return}
@@ -710,10 +687,11 @@ async function doDam(){
   document.getElementById('dldr').style.display='block';
   try{
     const content=photos.map(b=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:b}}));
-    content.push({type:'text',text:`Hasarları tespit et. Türkiye TL maliyeti ver. JSON:\n{"damage_areas":[{"name_tr":"","name_en":"","severity":"minor|moderate|severe","repair_cost_min":0,"repair_cost_max":0,"description_tr":"","description_en":""}],"overall_severity":"minor","summary_tr":"","summary_en":""}`});
-    const r=await callClaude(`Araç hasar ekspertisin. SADECE ham JSON döndür.`,content,900);
+    content.push({type:'text',text:`Bu arac fotograflarindaki hasarlari tespit et. Turkiye'de yetkili servis ve yedek parca fiyatlarina gore TL maliyet ver. Orjinal parca fiyatlari ve iscilik ayri belirt. JSON:
+{"damage_areas":[{"name_tr":"On tampon","name_en":"Front bumper","severity":"moderate","part_cost_min":3500,"part_cost_max":6000,"labor_cost_min":500,"labor_cost_max":1000,"repair_cost_min":4000,"repair_cost_max":7000,"description_tr":"Hasar aciklamasi","description_en":"Damage description","repair_note_tr":"Yetkili servis veya oto tamircide yapilabilir"}],"overall_severity":"minor|moderate|severe","total_min":0,"total_max":0,"summary_tr":"","summary_en":""}`});
+    const r=await callClaude(`Arac hasar ekspertisisin. Turkiye piyasasi parca ve iscilik fiyatlarini biliyorsun. SADECE ham JSON don.`,content,1000);
     renderDam(r);document.getElementById('damform').style.display='none';document.getElementById('damres').style.display='block';
-  }catch(e){showE('derr','Hasar analizi başarısız.')}
+  }catch(e){showE('derr','Hasar analizi başarısız: '+e.message)}
   finally{btn.disabled=false;document.getElementById('dldr').style.display='none'}
 }
 function resetDam(){
@@ -723,7 +701,6 @@ function resetDam(){
   [0,1,2].forEach(i=>{const t=document.getElementById('dt'+i);t.className='pt';t.innerHTML=`<input type="file" id="df${i}" accept="image/*" capture="environment" style="display:none" onchange="addDph(this,${i})"><span>+</span>`;t.onclick=()=>trig('df'+i)});
 }
 
-// ═══ COMPARE ═══
 async function doCmp(){
   const b1=document.getElementById('c1b').value.trim(),m1=document.getElementById('c1m').value.trim(),y1=document.getElementById('c1y').value.trim();
   const b2=document.getElementById('c2b').value.trim(),m2=document.getElementById('c2m').value.trim(),y2=document.getElementById('c2y').value.trim();
@@ -731,42 +708,49 @@ async function doCmp(){
   hideE('cmperr');const btn=document.getElementById('cmpbtn');btn.disabled=true;
   document.getElementById('cmpldr').style.display='block';
   const p1=document.getElementById('c1p').value.trim(),p2=document.getElementById('c2p').value.trim();
-  const mkt1=getMkt(b1,m1,y1),mkt2=getMkt(b2,m2,y2);
+  const km1=document.getElementById('c1km').value.trim(),km2=document.getElementById('c2km').value.trim();
+  const mkt1=getMkt(b1,m1,y1,km1),mkt2=getMkt(b2,m2,y2,km2);
   try{
-    const[r1,r2]=await Promise.all([aiAnalyze(b1,m1,y1,p1,mkt1,null),aiAnalyze(b2,m2,y2,p2,mkt2,null)]);
-    r1._m={brand:b1,model:m1,year:y1,price:p1,mkt:mkt1};r2._m={brand:b2,model:m2,year:y2,price:p2,mkt:mkt2};
+    const[r1,r2]=await Promise.all([aiAnalyze(b1,m1,y1,km1,p1,mkt1,null),aiAnalyze(b2,m2,y2,km2,p2,mkt2,null)]);
+    r1._m={brand:b1,model:m1,year:y1,km:km1,price:p1,mkt:mkt1};
+    r2._m={brand:b2,model:m2,year:y2,km:km2,price:p2,mkt:mkt2};
     renderCmp(r1,r2);document.getElementById('cmpform').style.display='none';document.getElementById('cmpres').style.display='block';
   }catch(e){showE('cmperr','Karşılaştırma başarısız: '+e.message)}
   finally{btn.disabled=false;document.getElementById('cmpldr').style.display='none'}
 }
 function resetCmp(){document.getElementById('cmpform').style.display=S.isPrem?'block':'none';document.getElementById('cmpgate').style.display=S.isPrem?'none':'block';document.getElementById('cmpres').style.display='none'}
 
-// ═══ SCORE ═══
 function si(s){if(s>=8)return{tr:'Alınır',en:'Good Buy',c:'g',em:'🟢'};if(s>=5)return{tr:'Düşünülebilir',en:'Consider',c:'y',em:'🟡'};return{tr:'Riskli',en:'Risky',c:'r',em:'🔴'}}
 function pc(v){return v>=8?'var(--gn)':v>=5?'var(--yw)':'var(--rd)'}
 function showE(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.classList.add('on')}}
 function hideE(id){const e=document.getElementById(id);if(e)e.classList.remove('on')}
 
-// ═══ RENDER RESULT ═══
 function renderRes(r){
   const m=r._m||{},mkt=m.mkt||{found:false};
   const bd=r.buy_score||{},sc=typeof bd.score==='number'?bd.score:7;
   const bk=bd.breakdown||{},inf=si(sc);
   const isEN=S.lang==='en';
   let fairH='';
-  if(m.price&&mkt.found){const a=parseFloat(m.price);fairH=a<mkt.min_r*.95?`<div class="pfair" style="color:var(--gn)">🎯 Piyasanın altında — Fırsat!</div>`:a>mkt.max_r*1.05?`<div class="pfair" style="color:var(--rd)">⚠️ Fiyat piyasa üzerinde</div>`:`<div class="pfair" style="color:var(--gn)">✅ Fiyat piyasaya uygun</div>`}
-  const minP=mkt.found?mkt.min_p:(r.market_price_tr?.min_price||'—');
-  const maxP=mkt.found?mkt.max_p:(r.market_price_tr?.max_price||'—');
-  const avgP=mkt.found?mkt.avg_p:(r.market_price_tr?.avg_price||'—');
-  const cnt=mkt.found?mkt.cnt:(r.market_price_tr?.sample_size||'~');
+  if(m.price&&mkt.found){
+    const a=parseFloat(m.price);
+    fairH=a<mkt.min_r*.95?`<div class="pfair" style="color:var(--gn)">🎯 Piyasanın altında — Fırsat!</div>`:a>mkt.max_r*1.05?`<div class="pfair" style="color:var(--rd)">⚠️ Fiyat piyasa üzerinde</div>`:`<div class="pfair" style="color:var(--gn)">✅ Fiyat piyasaya uygun</div>`;
+  }
+  const aiMkt=r.market_price_tr||{};
+  const minP=mkt.found?mkt.min_p:(aiMkt.min_price||'—');
+  const maxP=mkt.found?mkt.max_p:(aiMkt.max_price||'—');
+  const avgP=mkt.found?mkt.avg_p:(aiMkt.avg_price||'—');
+  const cnt=mkt.found?mkt.cnt:20;
+  const kmNote=mkt.km?`<div style="font-size:11px;color:var(--yw);margin-top:5px">🔧 ${parseInt(mkt.km).toLocaleString('tr-TR')} km bazlı fiyat düzeltmesi uygulandı</div>`:'';
   const dbdg=!mkt.found?`<span class="bdg">🌍 Global veri</span>`:mkt.extra?`<span class="bdg">📊 Tahmin</span>`:'';
   const sp=r.technical_specs||{};
   const spR=[['Motor',sp.engine],['Yakıt',sp.fuel_type],['Tüketim',sp.consumption],['Şanzıman',sp.transmission],['Güç',sp.power_hp]].filter(([,v])=>v);
   const iss=r.common_issues||[];
   const cmt=isEN?(r.ai_comment_en||r.ai_comment_tr):(r.ai_comment_tr||r.ai_comment_en);
   const detL=r._det?`<div style="background:var(--pdim);border:1px solid var(--bh);border-radius:9px;padding:9px 12px;font-size:13px;margin-bottom:11px;color:var(--pr)">🤖 AI Tespiti: ${r._det.brand||''} ${r._det.model||''} ${r._det.year||''}</div>`:'';
+  const kmDisp=m.km?`<span style="color:var(--mu);font-size:12px"> • ${parseInt(m.km).toLocaleString('tr-TR')} km</span>`:'';
   document.getElementById('resbody').innerHTML=`
-${detL}<div style="font-size:13px;color:var(--mu);font-weight:600;margin-bottom:11px">${m.year||''} ${m.brand||''} ${m.model||''}</div>
+${detL}
+<div style="font-size:13px;color:var(--mu);font-weight:600;margin-bottom:11px">${m.year||''} ${m.brand||''} ${m.model||''}${kmDisp}</div>
 <div class="shero ${inf.c}">
   <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px">Alınır mı?</div>
   <div class="sh-n">${sc.toFixed(1)}<span class="sh-den">/10</span></div>
@@ -775,11 +759,18 @@ ${detL}<div style="font-size:13px;color:var(--mu);font-weight:600;margin-bottom:
 </div>
 <div class="brow">
   <button class="bsm" onclick="openShareM()">📤 Paylaş</button>
-  <button class="bsm" onclick="${S.isPrem?'openDetail()':'alert(\"Premium özelliği: Detaylı rapor.\")'} ">📋 Detay ${S.isPrem?'':'🔒'}</button>
+  <button class="bsm" onclick="${S.isPrem?'openDetail()':'alert(\"Premium özelliği.\")'}">📋 Detay ${S.isPrem?'':'🔒'}</button>
 </div>
-<div class="card"><div class="ctit">📊 Piyasa Fiyatı ${dbdg}</div>
-  <div class="mgr"><div class="mi"><div class="mi-l">Min</div><div class="mi-v">${minP}</div></div><div class="mi"><div class="mi-l">Ort.</div><div class="mi-v m">${avgP}</div></div><div class="mi"><div class="mi-l">Maks</div><div class="mi-v">${maxP}</div></div></div>
-  ${fairH}  <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:7px">sahibinden.com • ~${cnt} ilan ortalaması</div>
+<div class="card">
+  <div class="ctit">📊 Piyasa Fiyatı ${dbdg}</div>
+  <div class="mgr">
+    <div class="mi"><div class="mi-l">Min</div><div class="mi-v">${minP}</div></div>
+    <div class="mi"><div class="mi-l">Ort. (~${cnt} ilan)</div><div class="mi-v m">${avgP}</div></div>
+    <div class="mi"><div class="mi-l">Maks</div><div class="mi-v">${maxP}</div></div>
+  </div>
+  ${kmNote}
+  ${fairH}
+  <div style="text-align:center;font-size:11px;color:var(--dim);margin-top:7px">sahibinden.com • ~${cnt} ilan ortalaması</div>
 </div>
 ${spR.length?`<div class="card"><div class="ctit">⚙️ Teknik Özellikler</div><div class="sgr">${spR.map(([l,v])=>`<div class="si"><div class="si-l">${l}</div><div class="si-v">${v}</div></div>`).join('')}</div></div>`:''}
 ${iss.length?`<div class="card"><div class="ctit">🔧 Kronik Sorunlar</div>${iss.map(i=>`<div class="iit"><div class="idot ${i.severity||'medium'}"></div><div><div style="font-size:14px;font-weight:600;margin-bottom:2px">${isEN?i.issue:(i.issue_tr||i.issue)}</div><div style="font-size:13px;color:var(--mu);line-height:1.5">${isEN?i.description_en:i.description_tr}</div></div></div>`).join('')}</div>`:''}
@@ -788,20 +779,31 @@ ${cmt?`<div class="card"><div class="ctit">🤖 AI Yorumu</div><div style="font-
   setTimeout(()=>document.querySelectorAll('.pfi').forEach(el=>el.style.width=el.dataset.w+'%'),80);
 }
 
-// ═══ RENDER DAMAGE ═══
 function renderDam(r){
   const isEN=S.lang==='en',areas=r.damage_areas||[];
   const sl={minor:'Hafif',moderate:'Orta',severe:'Ağır'};
-  const tmn=areas.reduce((s,a)=>s+(a.repair_cost_min||0),0),tmx=areas.reduce((s,a)=>s+(a.repair_cost_max||0),0);
+  const tmn=r.total_min||areas.reduce((s,a)=>s+(a.repair_cost_min||0),0);
+  const tmx=r.total_max||areas.reduce((s,a)=>s+(a.repair_cost_max||0),0);
   document.getElementById('damresbody').innerHTML=`
 <div class="ctit" style="margin-bottom:12px">📍 Tespit Edilen Hasar Bölgeleri</div>
-${areas.map(a=>`<div class="dit"><div class="dhd"><div style="font-size:14px;font-weight:700">${isEN?a.name_en:(a.name_tr||a.name_en)}</div><div class="dsv ${a.severity||'minor'}">${sl[a.severity]||a.severity}</div></div><div style="font-size:13px;color:var(--mu);margin-bottom:3px">💰 ${(a.repair_cost_min||0).toLocaleString('tr-TR')} – ${(a.repair_cost_max||0).toLocaleString('tr-TR')} TL</div><div style="font-size:13px;color:var(--mu)">${isEN?a.description_en:a.description_tr}</div></div>`).join('')}
-<div style="background:var(--pdim);border:1px solid var(--bh);border-radius:var(--r2);padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin:12px 0"><div style="font-size:13px;color:var(--mu)">Tahmini Toplam</div><div style="font-size:18px;font-weight:900;color:var(--pr)">${tmn.toLocaleString('tr-TR')} – ${tmx.toLocaleString('tr-TR')} TL</div></div>
+${areas.map(a=>`<div class="dit">
+  <div class="dhd"><div style="font-size:14px;font-weight:700">${isEN?a.name_en:(a.name_tr||a.name_en)}</div><div class="dsv ${a.severity||'minor'}">${sl[a.severity]||a.severity}</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+    <div style="background:var(--bg2);border-radius:7px;padding:7px 9px;font-size:12px"><div style="color:var(--mu);margin-bottom:2px">🔩 Parça</div><div style="font-weight:700">${(a.part_cost_min||0).toLocaleString('tr-TR')} – ${(a.part_cost_max||0).toLocaleString('tr-TR')} TL</div></div>
+    <div style="background:var(--bg2);border-radius:7px;padding:7px 9px;font-size:12px"><div style="color:var(--mu);margin-bottom:2px">🔧 İşçilik</div><div style="font-weight:700">${(a.labor_cost_min||0).toLocaleString('tr-TR')} – ${(a.labor_cost_max||0).toLocaleString('tr-TR')} TL</div></div>
+  </div>
+  <div style="font-size:13px;color:var(--pr);font-weight:700;margin-bottom:4px">Toplam: ${(a.repair_cost_min||0).toLocaleString('tr-TR')} – ${(a.repair_cost_max||0).toLocaleString('tr-TR')} TL</div>
+  ${a.repair_note_tr?`<div style="font-size:12px;color:var(--mu)">${a.repair_note_tr}</div>`:''}
+  <div style="font-size:13px;color:var(--mu);margin-top:4px">${isEN?a.description_en:a.description_tr}</div>
+</div>`).join('')}
+<div style="background:var(--pdim);border:1px solid var(--bh);border-radius:var(--r2);padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin:12px 0">
+  <div style="font-size:13px;color:var(--mu)">Tahmini Toplam Maliyet</div>
+  <div style="font-size:18px;font-weight:900;color:var(--pr)">${tmn.toLocaleString('tr-TR')} – ${tmx.toLocaleString('tr-TR')} TL</div>
+</div>
 ${r.summary_tr?`<div class="card"><div class="ctit">🤖 AI Yorumu</div><div style="font-size:14px;line-height:1.75">${isEN?(r.summary_en||r.summary_tr):r.summary_tr}</div></div>`:''}
-<div class="notice"><span>⚠️</span><span>Bu analiz yapay zeka tarafından oluşturulmuştur. Profesyonel ekspertiz önerilir.</span></div>`;
+<div class="notice"><span>⚠️</span><span>Fiyatlar Türkiye piyasası tahminidir. Kesin fiyat için yetkili servis veya oto tamirciye danışın.</span></div>`;
 }
 
-// ═══ RENDER COMPARE ═══
 function renderCmp(r1,r2){
   const m1=r1._m||{},m2=r2._m||{};
   const s1=r1.buy_score?.score||0,s2=r2.buy_score?.score||0;
@@ -809,6 +811,8 @@ function renderCmp(r1,r2){
   const bk1=r1.buy_score?.breakdown||{},bk2=r2.buy_score?.breakdown||{};
   const factors=[['Güvenilirlik','reliability'],['Yakıt Ver.','fuel_efficiency'],['Fiyat Uyg.','market_fairness'],['Yaş/Fiyat','age_value_ratio'],['Popülerlik','turkey_popularity']];
   const winner=s1>s2?`${m1.brand} ${m1.model}`:s2>s1?`${m2.brand} ${m2.model}`:'Berabere';
+  const kmDisp1=m1.km?`<div style="font-size:11px;color:var(--mu)">${parseInt(m1.km).toLocaleString('tr-TR')} km</div>`:'';
+  const kmDisp2=m2.km?`<div style="font-size:11px;color:var(--mu)">${parseInt(m2.km).toLocaleString('tr-TR')} km</div>`:'';
   document.getElementById('cmpbody').innerHTML=`
 <div class="card" style="text-align:center;background:var(--gbg);border-color:var(--gbr);margin-bottom:12px">
   <div style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">🏆 Kazanan</div>
@@ -817,16 +821,18 @@ function renderCmp(r1,r2){
 <div class="cg">
   <div class="cc ${s1>=s2?'win':''}">
     <div style="font-size:10px;color:var(--mu);text-transform:uppercase;margin-bottom:5px">Araç 1</div>
-    <div style="font-size:11px;font-weight:700;margin-bottom:7px;word-break:break-word">${m1.year} ${m1.brand} ${m1.model}</div>
-    <div style="font-size:36px;font-weight:900;color:${pc(s1)}">${s1.toFixed(1)}</div>
+    <div style="font-size:11px;font-weight:700;margin-bottom:4px;word-break:break-word">${m1.year} ${m1.brand} ${m1.model}</div>
+    ${kmDisp1}
+    <div style="font-size:36px;font-weight:900;color:${pc(s1)};margin-top:6px">${s1.toFixed(1)}</div>
     <div style="font-size:10px;color:var(--mu)">/10</div>
     <div style="font-size:12px;font-weight:700;margin-top:4px;color:${pc(s1)}">${si1.em} ${si1.tr}</div>
     ${m1.mkt?.found?`<div style="font-size:11px;color:var(--mu);margin-top:4px">Ort: ${m1.mkt.avg_p}</div>`:''}
   </div>
   <div class="cc ${s2>s1?'win':''}">
     <div style="font-size:10px;color:var(--mu);text-transform:uppercase;margin-bottom:5px">Araç 2</div>
-    <div style="font-size:11px;font-weight:700;margin-bottom:7px;word-break:break-word">${m2.year} ${m2.brand} ${m2.model}</div>
-    <div style="font-size:36px;font-weight:900;color:${pc(s2)}">${s2.toFixed(1)}</div>
+    <div style="font-size:11px;font-weight:700;margin-bottom:4px;word-break:break-word">${m2.year} ${m2.brand} ${m2.model}</div>
+    ${kmDisp2}
+    <div style="font-size:36px;font-weight:900;color:${pc(s2)};margin-top:6px">${s2.toFixed(1)}</div>
     <div style="font-size:10px;color:var(--mu)">/10</div>
     <div style="font-size:12px;font-weight:700;margin-top:4px;color:${pc(s2)}">${si2.em} ${si2.tr}</div>
     ${m2.mkt?.found?`<div style="font-size:11px;color:var(--mu);margin-top:4px">Ort: ${m2.mkt.avg_p}</div>`:''}
@@ -838,98 +844,94 @@ ${factors.map(([lbl,key])=>{const v1=bk1[key]||5,v2=bk2[key]||5;return`<div clas
 <div class="notice"><span>⚠️</span><span>Bu analiz yapay zeka tarafından oluşturulmuştur. Profesyonel ekspertiz önerilir.</span></div>`;
 }
 
-// ═══ HISTORY ═══
 function renderHist(){
   const el=document.getElementById('histbody');
   if(!S.analyses.length){el.innerHTML=`<div style="text-align:center;padding:44px 20px"><div style="font-size:44px;margin-bottom:10px">📋</div><div style="font-size:15px;font-weight:700;margin-bottom:4px">Henüz analiz yok</div><div style="font-size:13px;color:var(--mu)">Ana ekrandan ilk analizinizi başlatın.</div></div>`;return}
   el.innerHTML=S.analyses.map((r,i)=>{
     const m=r._m||{},sc=r.buy_score?.score||0,inf=si(sc);
     const ds=new Date(m.ts||Date.now()).toLocaleDateString('tr-TR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-    return`<div class="hit" onclick="showHist(${i})"><div class="hball ${inf.c}">${sc.toFixed(1)}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.year||''} ${m.brand||''} ${m.model||''}</div><div style="font-size:12px;color:var(--mu)">${inf.em} ${inf.tr} • ${ds}</div></div><span style="color:var(--dim);font-size:20px">›</span></div>`;
+    const kmT=m.km?` • ${parseInt(m.km).toLocaleString('tr-TR')} km`:'';
+    return`<div class="hit" onclick="showHist(${i})"><div class="hball ${inf.c}">${sc.toFixed(1)}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.year||''} ${m.brand||''} ${m.model||''}${kmT}</div><div style="font-size:12px;color:var(--mu)">${inf.em} ${inf.tr} • ${ds}</div></div><span style="color:var(--dim);font-size:20px">›</span></div>`;
   }).join('');
 }
 function showHist(i){S.cur=S.analyses[i];renderRes(S.cur);S.prevScr='history';navigate('results')}
 
-// ═══ SHARE ═══
 function openShareM(){
   if(!S.cur) return;
   const r=S.cur,m=r._m||{},mkt=m.mkt||{},sc=r.buy_score?.score||0,inf=si(sc);
   const col={g:'var(--gn)',y:'var(--yw)',r:'var(--rd)'}[inf.c];
-  document.getElementById('shareprev').innerHTML=`<div style="background:linear-gradient(145deg,#0d1b2a,#152232);border:1px solid var(--br);border-radius:var(--r);padding:16px"><div style="font-size:10px;font-weight:700;color:var(--pr);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">🚗 OtoSkor AI • Türkiye Pazarı</div><div style="font-size:20px;font-weight:900">${m.brand||''} ${m.model||''}</div><div style="font-size:14px;color:var(--mu)">${m.year||''}</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--br)"><div style="font-size:54px;font-weight:900;line-height:1;color:${col}">${sc.toFixed(1)}</div><div style="text-align:right"><div style="font-size:20px;font-weight:800;color:${col}">${inf.em} ${inf.tr}</div>${mkt.found?`<div style="font-size:12px;color:var(--mu);margin-top:4px">Ort: ${mkt.avg_p}</div>`:''}</div></div></div>`;
+  const kmT=m.km?`<div style="font-size:12px;color:var(--mu)">${parseInt(m.km).toLocaleString('tr-TR')} km</div>`:'';
+  document.getElementById('shareprev').innerHTML=`<div style="background:linear-gradient(145deg,#0d1b2a,#152232);border:1px solid var(--br);border-radius:var(--r);padding:16px"><div style="font-size:10px;font-weight:700;color:var(--pr);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">🚗 OtoSkor AI • Türkiye Pazarı</div><div style="font-size:20px;font-weight:900">${m.brand||''} ${m.model||''}</div><div style="font-size:14px;color:var(--mu)">${m.year||''}</div>${kmT}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--br)"><div style="font-size:54px;font-weight:900;line-height:1;color:${col}">${sc.toFixed(1)}</div><div style="text-align:right"><div style="font-size:20px;font-weight:800;color:${col}">${inf.em} ${inf.tr}</div>${mkt.found?`<div style="font-size:12px;color:var(--mu);margin-top:4px">Ort: ${mkt.avg_p}</div>`:''}</div></div></div>`;
   openM('m-share');
 }
 function shareWA(){
   if(!S.cur) return;
   const r=S.cur,m=r._m||{},sc=r.buy_score?.score||0,inf=si(sc);
-  const txt=`🚗 *OtoSkor AI — Araç Analizi*\n\n*${m.year} ${m.brand} ${m.model}*\n\n📊 Skor: *${sc.toFixed(1)}/10* ${inf.em} ${inf.tr}\n${r._m?.mkt?.found?`💰 Piyasa Ort: ${r._m.mkt.avg_p}\n`:''}\n${r.ai_comment_tr||''}\n\n⚠️ AI analizi — ekspertiz önerilir\notoskor.app`;
+  const kmT=m.km?`🛣️ Kilometre: ${parseInt(m.km).toLocaleString('tr-TR')} km\n`:'';
+  const txt=`🚗 *OtoSkor AI — Araç Analizi*\n\n*${m.year} ${m.brand} ${m.model}*\n${kmT}\n📊 Skor: *${sc.toFixed(1)}/10* ${inf.em} ${inf.tr}\n${r._m?.mkt?.found?`💰 Piyasa Ort: ${r._m.mkt.avg_p}\n`:''}\n${r.ai_comment_tr||''}\n\n⚠️ AI analizi — ekspertiz önerilir\nsedomem.github.io/otoskor-ai`;
   window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
 function dlShare(){
   if(!S.cur) return;
   const r=S.cur,m=r._m||{},mkt=m.mkt||{},sc=r.buy_score?.score||0,inf=si(sc);
   const col={g:'#22c55e',y:'#f59e0b',r:'#ef4444'}[inf.c];
-  const cv=document.getElementById('cv');cv.width=600;cv.height=320;
+  const cv=document.getElementById('cv');cv.width=600;cv.height=340;
   const ctx=cv.getContext('2d');
-  ctx.fillStyle='#101b22';ctx.fillRect(0,0,600,320);
-  ctx.strokeStyle='rgba(60,175,246,.2)';ctx.lineWidth=1;ctx.strokeRect(1,1,598,318);
-  ctx.beginPath();ctx.arc(530,100,55,0,Math.PI*2);ctx.fillStyle=col+'20';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
-  ctx.fillStyle=col;ctx.font='bold 34px Arial';ctx.textAlign='center';ctx.fillText(sc.toFixed(1),530,112);
-  ctx.font='12px Arial';ctx.fillStyle='#7fb3d3';ctx.fillText('/10',530,130);
+  ctx.fillStyle='#101b22';ctx.fillRect(0,0,600,340);
+  ctx.strokeStyle='rgba(60,175,246,.2)';ctx.lineWidth=1;ctx.strokeRect(1,1,598,338);
+  ctx.beginPath();ctx.arc(530,105,55,0,Math.PI*2);ctx.fillStyle=col+'20';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle=col;ctx.font='bold 34px Arial';ctx.textAlign='center';ctx.fillText(sc.toFixed(1),530,118);
+  ctx.font='12px Arial';ctx.fillStyle='#7fb3d3';ctx.fillText('/10',530,136);
   ctx.textAlign='left';ctx.fillStyle='#3caff6';ctx.font='bold 11px Arial';ctx.fillText('🚗  OtoSkor AI • TÜRKİYE',28,40);
   ctx.fillStyle='#e8f4fd';ctx.font='bold 30px Arial';ctx.fillText(`${m.year||''} ${m.brand||''}`,28,86);
   ctx.font='bold 24px Arial';ctx.fillStyle='#b8d9f0';ctx.fillText(m.model||'',28,120);
-  ctx.fillStyle=col;ctx.font='bold 20px Arial';ctx.fillText(`${inf.em}  ${inf.tr}`,28,162);
-  ctx.strokeStyle='rgba(60,175,246,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(28,187);ctx.lineTo(572,187);ctx.stroke();
-  if(mkt.found){ctx.fillStyle='#7fb3d3';ctx.font='13px Arial';ctx.fillText(`Piyasa: ${mkt.min_p} – ${mkt.max_p}  •  Ort: ${mkt.avg_p}`,28,210)}
-  const cmt=(r.ai_comment_tr||'').substring(0,130);ctx.fillStyle='#8bb8d4';ctx.font='13px Arial';
-  const words=cmt.split(' ');let line='',y=235;for(const w of words){const t=line+w+' ';if(ctx.measureText(t).width>500&&line){ctx.fillText(line.trim(),28,y);line=w+' ';y+=20;if(y>290)break}else line=t}
-  if(y<=290)ctx.fillText(line.trim(),28,y);
-  ctx.fillStyle='rgba(60,175,246,.3)';ctx.font='10px Arial';ctx.textAlign='right';ctx.fillText('otoskor.app',572,312);
+  if(m.km){ctx.font='13px Arial';ctx.fillStyle='#7fb3d3';ctx.fillText(`${parseInt(m.km).toLocaleString('tr-TR')} km`,28,142)}
+  ctx.fillStyle=col;ctx.font='bold 20px Arial';ctx.fillText(`${inf.em}  ${inf.tr}`,28,170);
+  ctx.strokeStyle='rgba(60,175,246,.15)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(28,193);ctx.lineTo(572,193);ctx.stroke();
+  if(mkt.found){ctx.fillStyle='#7fb3d3';ctx.font='13px Arial';ctx.fillText(`Piyasa: ${mkt.min_p} – ${mkt.max_p}  •  Ort: ${mkt.avg_p}`,28,215)}
+  const cmt=(r.ai_comment_tr||'').substring(0,120);ctx.fillStyle='#8bb8d4';ctx.font='13px Arial';
+  const words=cmt.split(' ');let line='',y=240;for(const w of words){const t=line+w+' ';if(ctx.measureText(t).width>500&&line){ctx.fillText(line.trim(),28,y);line=w+' ';y+=20;if(y>295)break}else line=t}
+  if(y<=295)ctx.fillText(line.trim(),28,y);
+  ctx.fillStyle='rgba(60,175,246,.3)';ctx.font='10px Arial';ctx.textAlign='right';ctx.fillText('sedomem.github.io/otoskor-ai',572,330);
   const a=document.createElement('a');a.download=`${m.year||''}-${m.brand||''}-${m.model||''}-otoskor.png`.replace(/\s+/g,'-');a.href=cv.toDataURL('image/png');a.click();
 }
 function cpyShare(){
   if(!S.cur) return;
   const r=S.cur,m=r._m||{},sc=r.buy_score?.score||0,inf=si(sc);
-  navigator.clipboard?.writeText(`${m.year} ${m.brand} ${m.model} — Skor: ${sc.toFixed(1)}/10 ${inf.em} ${inf.tr}\notoskor.app`).then(()=>alert('📋 Kopyalandı!'));
+  navigator.clipboard?.writeText(`${m.year} ${m.brand} ${m.model} — Skor: ${sc.toFixed(1)}/10 ${inf.em} ${inf.tr}\nsedomem.github.io/otoskor-ai`).then(()=>alert('📋 Kopyalandı!'));
 }
 
-// ═══ DETAIL ═══
 function openDetail(){
   if(!S.cur) return;
-  const r=S.cur,m=r._m||{},mkt=m.mkt||{},sc=r.buy_score?.score||0,inf=si(sc);
+  const r=S.cur,m=r._m||{},sc=r.buy_score?.score||0,inf=si(sc);
   const col={g:'var(--gn)',y:'var(--yw)',r:'var(--rd)'}[inf.c];
   document.getElementById('detailbody').innerHTML=`
 <div class="mt" style="text-align:left;margin-bottom:14px">📋 Detaylı Rapor</div>
-<div style="font-size:16px;font-weight:800;margin-bottom:12px">${m.year} ${m.brand} ${m.model}</div>
-<div class="card"><div class="ctit">💰 Tahmini Yıllık Sahiplik Maliyeti</div><div style="font-size:18px;font-weight:900;color:var(--pr)">${r.ownership_annual_tr||'Hesaplanıyor...'}</div><div style="font-size:12px;color:var(--mu);margin-top:4px">Yakıt + Sigorta + Bakım tahmini</div></div>
+<div style="font-size:16px;font-weight:800;margin-bottom:12px">${m.year} ${m.brand} ${m.model}${m.km?` • ${parseInt(m.km).toLocaleString('tr-TR')} km`:''}</div>
+<div class="card"><div class="ctit">💰 Tahmini Yıllık Sahiplik Maliyeti</div><div style="font-size:18px;font-weight:900;color:var(--pr)">${r.ownership_annual_tr||'—'}</div><div style="font-size:12px;color:var(--mu);margin-top:4px">Yakıt + Sigorta + Bakım tahmini</div></div>
 ${r.depreciation_3yr_pct?`<div class="card"><div class="ctit">📉 3 Yıl Değer Kaybı Tahmini</div><div style="font-size:18px;font-weight:900;color:var(--yw)">%${r.depreciation_3yr_pct}</div></div>`:''}
-<div class="card"><div class="ctit">🎯 Skor Özeti</div><div style="font-size:46px;font-weight:900;color:${col};line-height:1">${sc.toFixed(1)}<span style="font-size:18px;opacity:.5">/10</span></div><div style="font-size:16px;font-weight:700;color:${col};margin-top:4px">${inf.em} ${inf.tr}</div></div>
-<div class="notice"><span>⚠️</span><span>Bu analiz yapay zeka tarafından oluşturulmuştur. Satın alma kararı öncesinde profesyonel ekspertiz önerilir.</span></div>`;
+<div class="card"><div class="ctit">🎯 Skor</div><div style="font-size:46px;font-weight:900;color:${col};line-height:1">${sc.toFixed(1)}<span style="font-size:18px;opacity:.5">/10</span></div><div style="font-size:16px;font-weight:700;color:${col};margin-top:4px">${inf.em} ${inf.tr}</div></div>
+<div class="notice"><span>⚠️</span><span>Bu analiz yapay zeka tarafından oluşturulmuştur.</span></div>`;
   openM('m-detail');
 }
 
-// ═══ INVITE ═══
 function openInvite(){
   const code=Math.random().toString(36).substr(2,6).toUpperCase();
-  document.getElementById('invlnk').textContent=`otoskor.app/davet/${code}`;
+  document.getElementById('invlnk').textContent=`sedomem.github.io/otoskor-ai?davet=${code}`;
   openM('m-invite');
 }
-function invWA(){const lnk=document.getElementById('invlnk').textContent;window.open('https://wa.me/?text='+encodeURIComponent(`🚗 OtoSkor AI ile araç analizi yap! Türkiye'nin en akıllı araç değerlendirme uygulaması.\n\n${lnk}`),'_blank')}
+function invWA(){const lnk=document.getElementById('invlnk').textContent;window.open('https://wa.me/?text='+encodeURIComponent(`🚗 OtoSkor AI ile araç analizi yap!\n\n${lnk}`),'_blank')}
 function cpyInv(){const lnk=document.getElementById('invlnk').textContent;navigator.clipboard?.writeText(lnk).then(()=>alert('📋 Kopyalandı!'))}
 
-// ═══ LEGAL TEXTS ═══
 const LEGAL={
-  kvkk:{t:'KVKK Aydınlatma Metni',b:`<strong>VERİ SORUMLUSU:</strong> OtoSkor AI, Türkiye<br><br><strong>İŞLENEN VERİLER:</strong> E-posta adresi, cihaz bilgileri, araç analiz geçmişi.<br><br><strong>İŞLEME AMACI:</strong> Hizmet sunumu, kullanıcı deneyiminin iyileştirilmesi ve güvenlik.<br><br><strong>YASAL DAYANAK:</strong> 6698 sayılı KVKK md. 5/2 kapsamında açık rıza ve meşru menfaat.<br><br><strong>VERİ SAKLAMA:</strong> Hesap silme talebine kadar ya da yasal yükümlülük süresi boyunca.<br><br><strong>HAKLARINIZ:</strong> Erişim, düzeltme, silme, itiraz haklarınız için: kvkk@otoskor.app`},
-  riza:{t:'Açık Rıza Metni',b:`OtoSkor AI olarak sunduğumuz hizmetler kapsamında:<br><br>• Analiz geçmişinizin cihazınızda saklanması<br>• Hizmet iyileştirme amacıyla anonim kullanım istatistiklerinin toplanması<br>• Bildirim gönderilmesi (izin vermeniz halinde)<br><br>Yukarıdaki veri işleme faaliyetlerine <strong>açık rızanızla</strong> onay vermiş sayılırsınız. Rızanızı dilediğiniz zaman Ayarlar > Gizlilik üzerinden geri çekebilirsiniz.`},
-  gizlilik:{t:'Gizlilik Politikası',b:`<strong>SON GÜNCELLEME:</strong> Ocak 2025<br><br><strong>1. TOPLANAN VERİLER</strong><br>E-posta adresi, cihaz tipi, analiz geçmişi. Kredi kartı veya ödeme bilgisi saklanmaz.<br><br><strong>2. VERİ KULLANIMI</strong><br>Verileriniz yalnızca hizmet sunumu amacıyla kullanılır, üçüncü taraflarla paylaşılmaz.<br><br><strong>3. GÜVENLİK</strong><br>Veriler şifreli olarak saklanır. Şifreleriniz hash'lenerek korunur.<br><br><strong>4. İLETİŞİM</strong><br>gizlilik@otoskor.app`}
+  kvkk:{t:'KVKK Aydınlatma Metni',b:`<strong>VERİ SORUMLUSU:</strong> OtoSkor AI<br><br><strong>İŞLENEN VERİLER:</strong> E-posta, cihaz bilgileri, analiz geçmişi.<br><br><strong>İŞLEME AMACI:</strong> Hizmet sunumu ve güvenlik.<br><br><strong>YASAL DAYANAK:</strong> 6698 sayılı KVKK md. 5/2.<br><br><strong>HAKLARINIZ:</strong> kvkk@otoskor.app`},
+  riza:{t:'Açık Rıza Metni',b:`Analiz geçmişinizin saklanması ve anonim istatistik toplanmasına onay vermiş sayılırsınız. Rızanızı Ayarlar > Gizlilik üzerinden geri çekebilirsiniz.`},
+  gizlilik:{t:'Gizlilik Politikası',b:`<strong>1. TOPLANAN VERİLER</strong><br>E-posta, cihaz tipi, analiz geçmişi.<br><br><strong>2. VERİ KULLANIMI</strong><br>Veriler yalnızca hizmet sunumu için kullanılır.<br><br><strong>3. İLETİŞİM</strong><br>gizlilik@otoskor.app`}
 };
 function openLegal(k){const d=LEGAL[k];if(!d)return;document.getElementById('legt').textContent=d.t;document.getElementById('legb').innerHTML=d.b;openM('m-legal')}
-
-// ═══ MODALS ═══
 function openM(id){document.getElementById(id).classList.add('on')}
 function closeM(id){document.getElementById(id).classList.remove('on')}
 
-// ═══ INIT ═══
 (async()=>{
   const sess=await sg('sess');
   if(sess&&sess.uid){
@@ -941,11 +943,11 @@ function closeM(id){document.getElementById(id).classList.remove('on')}
   }
 })();
 </script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
   const app = initializeApp({
     apiKey: "AIzaSyBC7Ftabkk7lUePUqNBfDgcqrU5JqBJ9og",
     authDomain: "otoskor-ai.firebaseapp.com",
@@ -954,7 +956,6 @@ function closeM(id){document.getElementById(id).classList.remove('on')}
     messagingSenderId: "450631287656",
     appId: "1:450631287656:web:04ff591403de9eba5dccdd"
   });
-
   const auth = getAuth(app);
   const db = getFirestore(app);
   window._auth = auth;
