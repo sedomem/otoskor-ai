@@ -650,7 +650,7 @@ function parseJ(txt){
   }
 }
 async function callClaude(sys,msgs,mt=1500){
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:mt,system:sys,messages:[{role:'user',content:msgs}]})});
+  const resp=await fetch('https://otoskor-proxy.sedomem.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:mt,system:sys,messages:[{role:'user',content:msgs}]})});
   if(!resp.ok) throw new Error('HTTP '+resp.status);
   return parseJ((await resp.json()).content.map(b=>b.text||'').join('').trim());
 }
