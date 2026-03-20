@@ -7,16 +7,19 @@
   "background_color": "#101b22",
   "theme_color": "#3caff6",
   "orientation": "portrait",
+  "id": "/otoskor-ai/",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%23101b22'/%3E%3Ccircle cx='96' cy='96' r='72' fill='%23152232' stroke='%233caff6' stroke-width='3'/%3E%3Ctext x='96' y='82' font-family='Arial Black,Arial' font-weight='900' font-size='36' fill='%233caff6' text-anchor='middle' dominant-baseline='middle'%3EOTO%3C/text%3E%3Ctext x='96' y='118' font-family='Arial Black,Arial' font-weight='900' font-size='28' fill='%23ffffff' text-anchor='middle' dominant-baseline='middle'%3ESKOR%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%23101b22'/%3E%3Ccircle cx='256' cy='256' r='200' fill='%23152232' stroke='%233caff6' stroke-width='8'/%3E%3Ctext x='256' y='220' font-family='Arial Black,Arial' font-weight='900' font-size='96' fill='%233caff6' text-anchor='middle' dominant-baseline='middle'%3EOTO%3C/text%3E%3Ctext x='256' y='316' font-family='Arial Black,Arial' font-weight='900' font-size='76' fill='%23ffffff' text-anchor='middle' dominant-baseline='middle'%3ESKOR%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
