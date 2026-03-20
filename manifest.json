@@ -1,0 +1,22 @@
+{
+  "name": "OtoSkor AI",
+  "short_name": "OtoSkor",
+  "description": "Türkiye pazarı için AI destekli araç analiz uygulaması",
+  "start_url": "/otoskor-ai/",
+  "display": "standalone",
+  "background_color": "#101b22",
+  "theme_color": "#3caff6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
