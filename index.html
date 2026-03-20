@@ -940,5 +940,26 @@ function closeM(id){document.getElementById(id).classList.remove('on')}
   }
 })();
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyBC7Ftabkk7lUePUqNBfDgcqrU5JqBJ9og",
+    authDomain: "otoskor-ai.firebaseapp.com",
+    projectId: "otoskor-ai",
+    storageBucket: "otoskor-ai.firebasestorage.app",
+    messagingSenderId: "450631287656",
+    appId: "1:450631287656:web:04ff591403de9eba5dccdd"
+  });
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  window._auth = auth;
+  window._db = db;
+  window._fbReady = true;
+  console.log("Firebase hazır");
+</script>
 </body>
 </html>
