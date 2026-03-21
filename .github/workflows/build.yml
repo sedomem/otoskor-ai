@@ -57,11 +57,11 @@ jobs:
 
           android {
               namespace "com.otoskor.ai"
-              compileSdkVersion 34
+              compileSdkVersion 33
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
-                  targetSdkVersion 34
+                  targetSdkVersion 33
                   versionCode 1
                   versionName "1.0"
               }
@@ -98,7 +98,37 @@ jobs:
               implementation fileTree(include: ['*.jar'], dir: 'libs')
               implementation project(':capacitor-android')
               implementation project(':capacitor-cordova-android-plugins')
+              implementation 'androidx.core:core-splashscreen:1.0.1'
           }
+          EOF
+
+      - name: Fix SplashScreen theme in styles.xml
+        run: |
+          mkdir -p android/app/src/main/res/values
+          cat > android/app/src/main/res/values/styles.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+                  <item name="colorPrimary">@color/colorPrimary</item>
+                  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+                  <item name="colorAccent">@color/colorAccent</item>
+              </style>
+              <style name="Theme.SplashScreen" parent="Theme.SplashScreen.IconBackground">
+                  <item name="windowSplashScreenBackground">#101b22</item>
+                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+                  <item name="postSplashScreenTheme">@style/AppTheme</item>
+              </style>
+          </resources>
+          EOF
+
+          mkdir -p android/app/src/main/res/values
+          cat > android/app/src/main/res/values/colors.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <color name="colorPrimary">#3caff6</color>
+              <color name="colorPrimaryDark">#101b22</color>
+              <color name="colorAccent">#3caff6</color>
+          </resources>
           EOF
 
       - name: Build AAB
