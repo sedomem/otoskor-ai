@@ -746,6 +746,7 @@ function setTab(m){
 async function guestLogin(){
   await createSess({name:t('t-misafir'),email:'guest_'+Date.now(),method:'guest',isGuest:true});
 }
+
 async function authSub(){
   const email=document.getElementById('l-em').value.trim();
   const pass=document.getElementById('l-pw').value;
@@ -753,24 +754,45 @@ async function authSub(){
   hideLe();
   if(!email||!pass){showLe(t('login-err1'));return}
   if(pass.length<6){showLe(t('login-err2'));return}
-  if(aMode==='up'){
-    if(!name){showLe(t('login-err3'));return}
-    const ex=await sg('u:'+email);
-    if(ex){showLe(t('login-err4'));return}
-    await ss('u:'+email,{name,email,pass});
-    await createSess({name,email,method:'email',isGuest:false});
-  } else {
-    const u=await sg('u:'+email);
-    if(!u||u.pass!==pass){showLe(t('login-err5'));return}
-    await createSess({name:u.name,email,method:'email',isGuest:false});
+
+  // Firebase Auth hazır mı kontrol et
+  if(!window._auth){showLe('Firebase yükleniyor, lütfen bekleyin...');return}
+
+  try{
+    if(aMode==='up'){
+      if(!name){showLe(t('login-err3'));return}
+      // Firebase Auth ile kayıt
+      const {createUserWithEmailAndPassword,updateProfile} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+      const cred = await createUserWithEmailAndPassword(window._auth, email, pass);
+      await updateProfile(cred.user, {displayName: name});
+      await createSess({name, email, method:'email', isGuest:false, uid:cred.user.uid});
+    } else {
+      // Firebase Auth ile giriş
+      const {signInWithEmailAndPassword} = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+      const cred = await signInWithEmailAndPassword(window._auth, email, pass);
+      const displayName = cred.user.displayName || email.split('@')[0];
+      await createSess({name:displayName, email, method:'email', isGuest:false, uid:cred.user.uid});
+    }
+  }catch(e){
+    // Firebase hata kodlarını Türkçe'ye çevir
+    const msg={
+      'auth/email-already-in-use':t('login-err4'),
+      'auth/user-not-found':t('login-err5'),
+      'auth/wrong-password':t('login-err5'),
+      'auth/invalid-email':'Geçersiz e-posta adresi.',
+      'auth/invalid-credential':t('login-err5'),
+      'auth/too-many-requests':'Çok fazla deneme. Lütfen bekleyin.',
+      'auth/network-request-failed':'İnternet bağlantısını kontrol edin.',
+    }[e.code]||e.message;
+    showLe(msg);
   }
 }
 async function createSess(user){
   S.user=user;
-  // Kalıcı oturum — misafir hariç
   if(!user.isGuest){
-    await ss('sess',{uid:user.email,ts:Date.now()});
-    await ss('prof:'+user.email,{name:user.name,email:user.email,method:user.method,isGuest:false});
+    // Firebase UID ile oturum kaydet
+    const sessKey=user.uid||user.email;
+    await ss('sess',{uid:sessKey,email:user.email,name:user.name,method:user.method,ts:Date.now()});
   }
   await loadUD();
   document.getElementById('loginApp').style.display='none';
@@ -779,13 +801,22 @@ async function createSess(user){
 }
 async function loadUD(){
   if(!S.user||S.user.isGuest) return;
-  const c=await sg('ctr:'+S.user.email);
+  const key=S.user.uid||S.user.email;
+  const c=await sg('ctr:'+key);
   if(c){const td=new Date().toDateString();S.freeLeft=c.date===td?c.left:3;}else S.freeLeft=3;
-  const p=await sg('prem:'+S.user.email);S.isPrem=p===true;
-  const h=await sg('hist:'+S.user.email);S.analyses=h||[];
+  const p=await sg('prem:'+key);S.isPrem=p===true;
+  const h=await sg('hist:'+key);S.analyses=h||[];
 }
-async function saveCtr(){if(S.user&&!S.user.isGuest)await ss('ctr:'+S.user.email,{date:new Date().toDateString(),left:S.freeLeft})}
-async function saveHist(){if(S.user&&!S.user.isGuest)await ss('hist:'+S.user.email,S.analyses.slice(0,50))}
+async function saveCtr(){
+  if(!S.user||S.user.isGuest) return;
+  const key=S.user.uid||S.user.email;
+  await ss('ctr:'+key,{date:new Date().toDateString(),left:S.freeLeft});
+}
+async function saveHist(){
+  if(!S.user||S.user.isGuest) return;
+  const key=S.user.uid||S.user.email;
+  await ss('hist:'+key,S.analyses.slice(0,50));
+}
 async function logout(){
   await sd('sess');
   Object.assign(S,{user:null,analyses:[],isPrem:false,freeLeft:3,cur:null});
@@ -935,16 +966,48 @@ function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.o
 
 // ── API ──
 function parseJ(txt){
-  let s=txt.replace(/```json|```/gi,'').replace(/^\uFEFF/,'').trim();
-  const a=s.indexOf('{'),b=s.lastIndexOf('}');
-  if(a!==-1&&b!==-1&&b>a) s=s.slice(a,b+1);
-  s=s.replace(/[\u0000-\u001F\u007F]/g,' ');
-  try{return JSON.parse(s)}catch{s=s.replace(/,\s*([}\]])/g,'$1');try{return JSON.parse(s)}catch(e){throw new Error('JSON: '+e.message.slice(0,40))}}
+  try{
+    // Temizle
+    let s=txt.replace(/```json|```/gi,'').replace(/^\uFEFF/,'').trim();
+    // İlk { son } arasını al
+    const a=s.indexOf('{'),b=s.lastIndexOf('}');
+    if(a!==-1&&b>a) s=s.slice(a,b+1);
+    // Kontrol karakterlerini temizle
+    s=s.replace(/[\u0000-\u001F\u007F]/g,' ');
+    // Türkçe karakterleri koru ama sorunlu olanları düzelt
+    try{return JSON.parse(s)}catch{
+      // Trailing comma düzelt
+      s=s.replace(/,(\s*[}\]])/g,'$1');
+      // Tek tırnak → çift tırnak
+      s=s.replace(/'/g,'"');
+      try{return JSON.parse(s)}catch{
+        // Satır sonlarını temizle
+        s=s.replace(/\n/g,' ').replace(/\r/g,'');
+        try{return JSON.parse(s)}catch(e){
+          throw new Error('JSON parse: '+e.message.slice(0,50));
+        }
+      }
+    }
+  }catch(e){throw new Error('Parse: '+e.message.slice(0,50))}
 }
+
 async function callClaude(sys,msgs,mt=900){
-  const resp=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:mt,system:sys,messages:[{role:'user',content:msgs}]})});
-  if(!resp.ok) throw new Error('HTTP '+resp.status);
-  return parseJ((await resp.json()).content.map(b=>b.text||'').join('').trim());
+  try{
+    const resp=await fetch(PROXY,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:mt,
+        system:sys,
+        messages:[{role:'user',content:msgs}]
+      })
+    });
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const d=await resp.json();
+    const txt=d.content.map(b=>b.text||'').join('').trim();
+    return parseJ(txt);
+  }catch(e){throw new Error(e.message)}
 }
 
 // ── Analysis ──
@@ -1373,20 +1436,27 @@ function closeM(id){document.getElementById(id).classList.remove('on')}
 
 // ── INIT ──
 (async()=>{
-  // Kalıcı oturum kontrolü
-  const sess=await sg('sess');
-  if(sess&&sess.uid){
-    const prof=await sg('prof:'+sess.uid);
-    if(prof){
-      S.user=prof;
-      await loadUD();
-      document.getElementById('loginApp').style.display='none';
-      document.getElementById('mainApp').style.display='flex';
-      updBdg();updSett();applyLang();
-      return;
-    }
-  }
   applyLang();
+  // Firebase Auth durumunu dinle — otomatik oturum için
+  const checkAuth=()=>{
+    if(!window._auth){setTimeout(checkAuth,200);return}
+    // Firebase onAuthStateChanged ile oturum kontrol et
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js').then(({onAuthStateChanged})=>{
+      onAuthStateChanged(window._auth, async user=>{
+        if(user&&!S.user){
+          // Firebase oturumu var, otomatik giriş yap
+          await createSess({
+            name:user.displayName||user.email.split('@')[0],
+            email:user.email,
+            method:'email',
+            isGuest:false,
+            uid:user.uid
+          });
+        }
+      });
+    });
+  };
+  checkAuth();
 })();
 
 // Service Worker
