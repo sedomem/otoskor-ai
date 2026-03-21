@@ -47,8 +47,7 @@ jobs:
 
       - name: Fix Kotlin duplicate dependency
         run: |
-          cd android
-          cat >> app/build.gradle << 'EOF'
+          cat >> android/app/build.gradle << 'EOF'
 
           configurations.all {
               resolutionStrategy {
@@ -61,66 +60,61 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/otoskor.keystore
-          echo "KEYSTORE_PATH=$GITHUB_WORKSPACE/otoskor.keystore" >> $GITHUB_ENV
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
+          echo "Keystore size: $(wc -c < /home/runner/otoskor.keystore) bytes"
+          file /home/runner/otoskor.keystore
 
-      - name: Verify Keystore exists
+      - name: Write keystore.properties
         run: |
-          ls -la $GITHUB_WORKSPACE/otoskor.keystore
-          echo "Keystore size: $(wc -c < $GITHUB_WORKSPACE/otoskor.keystore) bytes"
-
-      - name: Inject signing config into build.gradle
-        run: |
-          cd android
-          # release signing config'i app/build.gradle'a enjekte et
-          cat > app/keystore.properties << EOF
-          storeFile=$GITHUB_WORKSPACE/otoskor.keystore
+          cat > android/keystore.properties << EOF
+          storeFile=/home/runner/otoskor.keystore
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyAlias=${{ secrets.KEY_ALIAS }}
           keyPassword=${{ secrets.KEYSTORE_PASSWORD }}
           EOF
 
-          # build.gradle'ı signing config ile güncelle
-          python3 << 'PYEOF'
-          import re
-
-          with open('app/build.gradle', 'r') as f:
+      - name: Patch build.gradle with signing config
+        run: |
+          cat > /tmp/patch.py << 'PYEOF'
+          with open('android/app/build.gradle', 'r') as f:
               content = f.read()
 
-          signing_config = """
+          signing_block = '''
               signingConfigs {
                   release {
                       def props = new Properties()
-                      props.load(new FileInputStream(rootProject.file('../app/keystore.properties')))
-                      storeFile file(props['storeFile'])
-                      storePassword props['storePassword']
-                      keyAlias props['keyAlias']
-                      keyPassword props['keyPassword']
+                      def propsFile = rootProject.file('keystore.properties')
+                      if (propsFile.exists()) { props.load(new FileInputStream(propsFile)) }
+                      storeFile file(props.getProperty('storeFile', ''))
+                      storePassword props.getProperty('storePassword', '')
+                      keyAlias props.getProperty('keyAlias', '')
+                      keyPassword props.getProperty('keyPassword', '')
                   }
               }
-          """
+          '''
 
-          # android { bloğunun hemen içine ekle
-          content = content.replace('android {', 'android {' + signing_config, 1)
+          if 'signingConfigs' not in content:
+              content = content.replace('android {', 'android {' + signing_block, 1)
 
-          # buildTypes release'e signingConfig ekle
-          content = content.replace(
-              'release {',
-              'release {\n            signingConfig signingConfigs.release',
-              1
-          )
+          if 'signingConfig signingConfigs.release' not in content:
+              content = content.replace(
+                  'release {\n',
+                  'release {\n            signingConfig signingConfigs.release\n',
+                  1
+              )
 
-          with open('app/build.gradle', 'w') as f:
+          with open('android/app/build.gradle', 'w') as f:
               f.write(content)
 
-          print("build.gradle updated successfully")
+          print("SUCCESS: build.gradle patched")
           PYEOF
+          python3 /tmp/patch.py
 
       - name: Build AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon
+          ./gradlew bundleRelease --no-daemon --stacktrace
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
