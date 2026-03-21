@@ -68,7 +68,7 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/otoskor.keystore
 
       - name: Build AAB
         run: |
@@ -76,7 +76,7 @@ jobs:
           chmod +x gradlew
           ./gradlew bundleRelease \
             --no-daemon \
-            -Pandroid.injected.signing.store.file=otoskor.keystore \
+          -Pandroid.injected.signing.store.file=$(pwd)/app/otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
