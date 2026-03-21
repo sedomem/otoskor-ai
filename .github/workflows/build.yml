@@ -15,12 +15,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20' # Daha güncel bir Node sürümü
 
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/
+          cp index.html www/ 2>/dev/null || true
           cp manifest.json www/ 2>/dev/null || true
           cp sw.js www/ 2>/dev/null || true
           cp icon-192.png www/ 2>/dev/null || true
@@ -36,24 +36,23 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Setup Java
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21' # Gradle 8.2 ile daha stabil çalışır
           distribution: 'temurin'
-          cache: gradle
 
       - name: Decode Keystore
         run: |
-          # printf kullanarak görünmez karakter hatasını (invalid input) engelledik
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
 
       - name: Build AAB
         run: |
           cd android
           chmod +x gradlew
-          # clean ekleyerek eski kalıntıları sildik, --no-daemon ile stabiliteyi artırdık
+          # Kütüphane hatasını aşmak için --no-daemon ve özel bellek ayarı ekledik
           ./gradlew clean bundleRelease --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8" \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
