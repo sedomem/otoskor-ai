@@ -41,19 +41,19 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+          cache: gradle
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
+          # printf kullanarak görünmez karakter hatasını (invalid input) engelledik
+          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
 
       - name: Build AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease \
+          # clean ekleyerek eski kalıntıları sildik, --no-daemon ile stabiliteyi artırdık
+          ./gradlew clean bundleRelease --no-daemon \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
@@ -63,4 +63,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: otoskor-release
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          path: android/app/build/outputs/bundle/release/*.aab
