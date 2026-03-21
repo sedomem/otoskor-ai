@@ -994,14 +994,14 @@ async function doPhScan(){
 }
 
 async function aiAnalyze(brand,model,year,km,price,mkt,b64){
-  const pi=price?`Asking price: ${Number(price).toLocaleString('tr-TR')} TL.`:'';
-  const ki=km?`Mileage: ${parseInt(km).toLocaleString('tr-TR')} km. Apply km-based price adjustment.`:'';
-  const mi=mkt.found?`Reference price (km-adjusted): ${mkt.min_p}-${mkt.max_p} avg:${mkt.avg_p}. Based on ~${mkt.cnt} listings.`:'No TR data available.';
-  const usr=`Analyze ${year} ${brand} ${model} for Turkish market. ${ki} ${pi} ${mi}
-Return ONLY this JSON:
-{"technical_specs":{"engine":"","fuel_type":"","consumption":"","transmission":"","power_hp":""},"common_issues":[{"issue":"","issue_tr":"","severity":"high|medium|low","description_tr":"","description_en":""}],"market_price_tr":{"min_price":"","max_price":"","avg_price":"","km_effect":"","sample_note":"~20 ilan"},"buy_score":{"score":7.2,"breakdown":{"reliability":7,"market_fairness":7,"fuel_efficiency":8,"age_value_ratio":7,"turkey_popularity":8}},"ai_comment_tr":"","ai_comment_en":"","ownership_annual_tr":"","depreciation_3yr_pct":18}`;
+  const pi=price?`Fiyat:${Number(price).toLocaleString('tr-TR')}TL.`:'';
+  const ki=km?`Km:${parseInt(km).toLocaleString('tr-TR')}km.`:'';
+  const mi=mkt.found?`Piyasa:${mkt.min_p}-${mkt.max_p} ort:${mkt.avg_p}.`:'TR verisi yok.';
+  const usr=`${year} ${brand} ${model} analiz et. ${ki}${pi}${mi}
+Asagidaki JSON sablonunu doldur, SADECE JSON don, baska hicbir sey yazma:
+{"technical_specs":{"engine":"1.6 benzin","fuel_type":"Benzin","consumption":"7L/100km","transmission":"Manuel","power_hp":"100"},"common_issues":[{"issue":"EGR","issue_tr":"EGR Sorunu","severity":"medium","description_tr":"Kisa aciklama.","description_en":"Short desc."}],"market_price_tr":{"min_price":"500.000 TL","max_price":"700.000 TL","avg_price":"600.000 TL","sample_note":"~20 ilan"},"buy_score":{"score":6.5,"breakdown":{"reliability":6,"market_fairness":7,"fuel_efficiency":6,"age_value_ratio":5,"turkey_popularity":7}},"ai_comment_tr":"Kisa Turkce yorum.","ai_comment_en":"Short English comment.","ownership_annual_tr":"30.000 TL","depreciation_3yr_pct":12}`;
   const msgs=b64?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:usr}]:usr;
-  return callClaude(`Turkish automotive expert. Return ONLY valid JSON, no other text.`,msgs,900);
+  return callClaude(`Turkiye otomotiv uzmanisisin. Verilen JSON sablonunu doldur. SADECE gecerli JSON don, markdown veya aciklama ekleme.`,msgs,900);
 }
 
 // ── Damage ──
