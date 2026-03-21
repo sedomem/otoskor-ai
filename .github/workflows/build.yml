@@ -45,76 +45,66 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Fix Kotlin duplicate dependency
-        run: |
-          cat >> android/app/build.gradle << 'EOF'
-
-          configurations.all {
-              resolutionStrategy {
-                  force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
-                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
-              }
-          }
-          EOF
-
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           echo "Keystore size: $(wc -c < /home/runner/otoskor.keystore) bytes"
-          file /home/runner/otoskor.keystore
 
-      - name: Write keystore.properties
+      - name: Overwrite app build.gradle
         run: |
-          cat > android/keystore.properties << EOF
-          storeFile=/home/runner/otoskor.keystore
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          keyPassword=${{ secrets.KEYSTORE_PASSWORD }}
-          EOF
+          cat > android/app/build.gradle << 'EOF'
+          apply plugin: 'com.android.application'
 
-      - name: Patch build.gradle with signing config
-        run: |
-          cat > /tmp/patch.py << 'PYEOF'
-          with open('android/app/build.gradle', 'r') as f:
-              content = f.read()
-
-          signing_block = '''
+          android {
+              compileSdkVersion 34
+              defaultConfig {
+                  applicationId "com.otoskor.ai"
+                  minSdkVersion 22
+                  targetSdkVersion 34
+                  versionCode 1
+                  versionName "1.0"
+              }
               signingConfigs {
                   release {
-                      def props = new Properties()
-                      def propsFile = rootProject.file('keystore.properties')
-                      if (propsFile.exists()) { props.load(new FileInputStream(propsFile)) }
-                      storeFile file(props.getProperty('storeFile', ''))
-                      storePassword props.getProperty('storePassword', '')
-                      keyAlias props.getProperty('keyAlias', '')
-                      keyPassword props.getProperty('keyPassword', '')
+                      storeFile file('/home/runner/otoskor.keystore')
+                      storePassword 'otoskor2024'
+                      keyAlias 'otoskor'
+                      keyPassword 'otoskor2024'
                   }
               }
-          '''
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                      signingConfig signingConfigs.release
+                  }
+              }
+              configurations.all {
+                  resolutionStrategy {
+                      force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+                  }
+              }
+          }
 
-          if 'signingConfigs' not in content:
-              content = content.replace('android {', 'android {' + signing_block, 1)
+          repositories {
+              flatDir {
+                  dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+              }
+          }
 
-          if 'signingConfig signingConfigs.release' not in content:
-              content = content.replace(
-                  'release {\n',
-                  'release {\n            signingConfig signingConfigs.release\n',
-                  1
-              )
-
-          with open('android/app/build.gradle', 'w') as f:
-              f.write(content)
-
-          print("SUCCESS: build.gradle patched")
-          PYEOF
-          python3 /tmp/patch.py
+          dependencies {
+              implementation fileTree(include: ['*.jar'], dir: 'libs')
+              implementation project(':capacitor-android')
+              implementation project(':capacitor-cordova-android-plugins')
+          }
+          EOF
 
       - name: Build AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon --stacktrace
+          ./gradlew bundleRelease --no-daemon
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
