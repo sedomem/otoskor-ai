@@ -99,11 +99,17 @@ jobs:
               implementation project(':capacitor-android')
               implementation project(':capacitor-cordova-android-plugins')
               implementation 'androidx.core:core-splashscreen:1.0.1'
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'androidx.webkit:webkit:1.8.0'
           }
           EOF
 
       - name: Fix SplashScreen theme in styles.xml
         run: |
+          # AndroidX etkinleştir
+          echo "android.useAndroidX=true" >> android/gradle.properties
+          echo "android.enableJetifier=true" >> android/gradle.properties
+
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
