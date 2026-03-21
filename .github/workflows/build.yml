@@ -17,6 +17,14 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Prepare web dir
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp manifest.json www/ 2>/dev/null || true
+          cp sw.js www/ 2>/dev/null || true
+          cp icon-192.png www/ 2>/dev/null || true
+
       - name: Install Capacitor
         run: |
           npm init -y
@@ -24,8 +32,9 @@ jobs:
 
       - name: Init Capacitor
         run: |
-          npx cap init "OtoSkor AI" "com.otoskor.ai" --web-dir .
+          npx cap init "OtoSkor AI" "com.otoskor.ai" --web-dir www
           npx cap add android
+          npx cap sync android
 
       - name: Setup Java
         uses: actions/setup-java@v4
