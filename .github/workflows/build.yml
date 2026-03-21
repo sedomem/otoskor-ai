@@ -25,9 +25,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          build-tools: 34.0.0
 
       - name: Prepare web dir
         run: |
@@ -51,7 +48,6 @@ jobs:
       - name: Fix Kotlin duplicate dependency
         run: |
           cd android
-          # app/build.gradle'a Kotlin version sabitle
           cat >> app/build.gradle << 'EOF'
 
           configurations.all {
@@ -63,23 +59,68 @@ jobs:
           }
           EOF
 
-          # build.gradle'a kotlin version ekle
-          sed -i "s/ext.kotlin_version = .*/ext.kotlin_version = '1.8.22'/" build.gradle || true
-
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/otoskor.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $GITHUB_WORKSPACE/otoskor.keystore
+          echo "KEYSTORE_PATH=$GITHUB_WORKSPACE/otoskor.keystore" >> $GITHUB_ENV
+
+      - name: Verify Keystore exists
+        run: |
+          ls -la $GITHUB_WORKSPACE/otoskor.keystore
+          echo "Keystore size: $(wc -c < $GITHUB_WORKSPACE/otoskor.keystore) bytes"
+
+      - name: Inject signing config into build.gradle
+        run: |
+          cd android
+          # release signing config'i app/build.gradle'a enjekte et
+          cat > app/keystore.properties << EOF
+          storeFile=$GITHUB_WORKSPACE/otoskor.keystore
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEYSTORE_PASSWORD }}
+          EOF
+
+          # build.gradle'ı signing config ile güncelle
+          python3 << 'PYEOF'
+          import re
+
+          with open('app/build.gradle', 'r') as f:
+              content = f.read()
+
+          signing_config = """
+              signingConfigs {
+                  release {
+                      def props = new Properties()
+                      props.load(new FileInputStream(rootProject.file('../app/keystore.properties')))
+                      storeFile file(props['storeFile'])
+                      storePassword props['storePassword']
+                      keyAlias props['keyAlias']
+                      keyPassword props['keyPassword']
+                  }
+              }
+          """
+
+          # android { bloğunun hemen içine ekle
+          content = content.replace('android {', 'android {' + signing_config, 1)
+
+          # buildTypes release'e signingConfig ekle
+          content = content.replace(
+              'release {',
+              'release {\n            signingConfig signingConfigs.release',
+              1
+          )
+
+          with open('app/build.gradle', 'w') as f:
+              f.write(content)
+
+          print("build.gradle updated successfully")
+          PYEOF
 
       - name: Build AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease \
-            --no-daemon \
-          -Pandroid.injected.signing.store.file=$(pwd)/app/otoskor.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
+          ./gradlew bundleRelease --no-daemon
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
