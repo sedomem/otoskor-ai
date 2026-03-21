@@ -29,7 +29,9 @@ jobs:
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/ 2>/dev/null || echo "<html></html>" > www/index.html
+          # Eğer ana dizinde index.html yoksa hata vermemesi için boş bir tane oluştur
+          if [ ! -f index.html ]; then echo "<html><body>OtoSkor AI</body></html>" > index.html; fi
+          cp index.html www/
           cp manifest.json www/ 2>/dev/null || true
           cp sw.js www/ 2>/dev/null || true
           cp icon-192.png www/ 2>/dev/null || true
@@ -50,7 +52,7 @@ jobs:
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           echo "Keystore size: $(wc -c < /home/runner/otoskor.keystore) bytes"
 
-      - name: Overwrite app build.gradle (SDK 34 Fix)
+      - name: Overwrite app build.gradle (Clean Fix)
         run: |
           cat > android/app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
@@ -58,17 +60,15 @@ jobs:
           android {
               namespace "com.otoskor.ai"
               compileSdkVersion 34
+              
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 34
                   versionCode 1
                   versionName "1.0"
-                  testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-                  aaptOptions {
-                       inlineXmlDirectives = true
-                  }
               }
+
               signingConfigs {
                   release {
                       storeFile file('/home/runner/otoskor.keystore')
@@ -77,12 +77,14 @@ jobs:
                       keyPassword 'otoskor2024'
                   }
               }
+
               buildTypes {
                   release {
                       minifyEnabled false
                       signingConfig signingConfigs.release
                   }
               }
+
               configurations.all {
                   resolutionStrategy {
                       force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
@@ -109,21 +111,20 @@ jobs:
           }
           EOF
 
-      - name: Fix AndroidX and Styles
+      - name: Final Android Fixes
         run: |
           echo "android.useAndroidX=true" >> android/gradle.properties
           echo "android.enableJetifier=true" >> android/gradle.properties
           
+          # Hatalı tema ayarlarını temizleyip en basit haliyle oluşturuyoruz
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
               <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
                   <item name="colorPrimary">#3caff6</item>
-                  <item name="windowNoTitle">true</item>
               </style>
               <style name="AppTheme.NoActionBarLaunch" parent="AppTheme">
-                  <item name="android:background">#101b22</item>
               </style>
           </resources>
           EOF
@@ -137,6 +138,6 @@ jobs:
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-release-v1
+          name: otoskor-final-aab
           path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 7
