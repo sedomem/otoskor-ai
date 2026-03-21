@@ -29,7 +29,7 @@ jobs:
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/
+          cp index.html www/ 2>/dev/null || echo "<html></html>" > www/index.html
           cp manifest.json www/ 2>/dev/null || true
           cp sw.js www/ 2>/dev/null || true
           cp icon-192.png www/ 2>/dev/null || true
@@ -50,20 +50,24 @@ jobs:
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           echo "Keystore size: $(wc -c < /home/runner/otoskor.keystore) bytes"
 
-      - name: Overwrite app build.gradle
+      - name: Overwrite app build.gradle (SDK 34 Fix)
         run: |
           cat > android/app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
 
           android {
               namespace "com.otoskor.ai"
-              compileSdkVersion 33
+              compileSdkVersion 34
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
-                  targetSdkVersion 33
+                  targetSdkVersion 34
                   versionCode 1
                   versionName "1.0"
+                  testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+                  aaptOptions {
+                       inlineXmlDirectives = true
+                  }
               }
               signingConfigs {
                   release {
@@ -82,13 +86,13 @@ jobs:
               configurations.all {
                   resolutionStrategy {
                       force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
-                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
                   }
               }
           }
 
           repositories {
+              google()
+              mavenCentral()
               flatDir {
                   dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
               }
@@ -98,57 +102,29 @@ jobs:
               implementation fileTree(include: ['*.jar'], dir: 'libs')
               implementation project(':capacitor-android')
               implementation project(':capacitor-cordova-android-plugins')
-              implementation 'androidx.core:core-splashscreen:1.0.1'
               implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'androidx.core:core-splashscreen:1.0.1'
               implementation 'androidx.webkit:webkit:1.8.0'
+              implementation 'com.google.android.material:material:1.9.0'
           }
           EOF
 
-      - name: Fix SplashScreen theme in styles.xml
+      - name: Fix AndroidX and Styles
         run: |
-          # AndroidX etkinleştir
           echo "android.useAndroidX=true" >> android/gradle.properties
           echo "android.enableJetifier=true" >> android/gradle.properties
-
+          
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
-              <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-                  <item name="colorPrimary">@color/colorPrimary</item>
-                  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-                  <item name="colorAccent">@color/colorAccent</item>
-              </style>
-
-              <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-                  <item name="colorPrimary">@color/colorPrimary</item>
-                  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-                  <item name="colorAccent">@color/colorAccent</item>
-                  <item name="windowActionBar">false</item>
+              <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+                  <item name="colorPrimary">#3caff6</item>
                   <item name="windowNoTitle">true</item>
               </style>
-
-              <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-                  <item name="windowSplashScreenBackground">#101b22</item>
-                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+              <style name="AppTheme.NoActionBarLaunch" parent="AppTheme">
+                  <item name="android:background">#101b22</item>
               </style>
-
-              <style name="Theme.SplashScreen" parent="Theme.SplashScreen.IconBackground">
-                  <item name="windowSplashScreenBackground">#101b22</item>
-                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme</item>
-              </style>
-          </resources>
-          EOF
-
-          mkdir -p android/app/src/main/res/values
-          cat > android/app/src/main/res/values/colors.xml << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <color name="colorPrimary">#3caff6</color>
-              <color name="colorPrimaryDark">#101b22</color>
-              <color name="colorAccent">#3caff6</color>
           </resources>
           EOF
 
@@ -161,6 +137,6 @@ jobs:
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-release
+          name: otoskor-release-v1
           path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 7
