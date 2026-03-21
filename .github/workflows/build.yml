@@ -44,18 +44,17 @@ jobs:
 
       - name: Decode Keystore
         run: |
+          # Görünmez karakter hatalarını önlemek için printf kullanıyoruz
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
 
       - name: Build AAB
         run: |
-          # Önce android klasörüne giriyoruz
           cd android
-          # Önbelleği burada temizliyoruz
+          # Eski kalıntıları ve kilitli dosyaları temizliyoruz
           rm -rf ~/.gradle/caches/
-          # Yetkiyi veriyoruz
           chmod +x gradlew
-          # Kilitleme hatasını önleyen ayarlar ile build alıyoruz
-          ./gradlew clean bundleRelease --no-daemon --vfs-forget-all \
+          # En güncel Gradle sürümüyle uyumlu build komutu
+          ./gradlew clean bundleRelease --no-daemon \
             -Dorg.gradle.vfs.watch=false \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
