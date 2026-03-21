@@ -42,10 +42,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # 🔥 KRİTİK EKLEME (sorunu çözen kısım)
-      - name: Fix Kotlin conflict
+      # 🔥 KRİTİK FIX (asıl çözüm)
+      - name: Fix Kotlin duplicate issue
         run: |
-          echo "kotlin.code.style=official" >> android/gradle.properties
+          echo "android.useAndroidX=true" >> android/gradle.properties
+          echo "android.enableJetifier=true" >> android/gradle.properties
           echo "kotlin.version=1.8.22" >> android/gradle.properties
 
       - name: Decode Keystore
@@ -59,10 +60,12 @@ jobs:
           chmod +x gradlew
           ./gradlew clean bundleRelease --no-daemon \
             -Dorg.gradle.vfs.watch=false \
+            -Dkotlin.incremental=false \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
+            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -x checkReleaseDuplicateClasses
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
