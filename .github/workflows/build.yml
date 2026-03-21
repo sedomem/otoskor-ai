@@ -15,12 +15,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: 34.0.0
 
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/ 2>/dev/null || true
+          cp index.html www/
           cp manifest.json www/ 2>/dev/null || true
           cp sw.js www/ 2>/dev/null || true
           cp icon-192.png www/ 2>/dev/null || true
@@ -28,7 +40,7 @@ jobs:
       - name: Install Capacitor
         run: |
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4
 
       - name: Init Capacitor
         run: |
@@ -36,39 +48,42 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      # 🔥 KRİTİK FIX (asıl çözüm)
-      - name: Fix Kotlin duplicate issue
+      - name: Fix Kotlin duplicate dependency
         run: |
-          echo "android.useAndroidX=true" >> android/gradle.properties
-          echo "android.enableJetifier=true" >> android/gradle.properties
-          echo "kotlin.version=1.8.22" >> android/gradle.properties
+          cd android
+          # app/build.gradle'a Kotlin version sabitle
+          cat >> app/build.gradle << 'EOF'
+
+          configurations.all {
+              resolutionStrategy {
+                  force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
+                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
+                  force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+              }
+          }
+          EOF
+
+          # build.gradle'a kotlin version ekle
+          sed -i "s/ext.kotlin_version = .*/ext.kotlin_version = '1.8.22'/" build.gradle || true
 
       - name: Decode Keystore
         run: |
-          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
 
       - name: Build AAB
         run: |
           cd android
-          rm -rf ~/.gradle/caches/
           chmod +x gradlew
-          ./gradlew clean bundleRelease --no-daemon \
-            -Dorg.gradle.vfs.watch=false \
-            -Dkotlin.incremental=false \
+          ./gradlew bundleRelease \
+            --no-daemon \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -x checkReleaseDuplicateClasses
+            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: otoskor-release
-          path: android/app/build/outputs/bundle/release/*.aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 7
