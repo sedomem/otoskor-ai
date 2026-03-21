@@ -36,24 +36,21 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Decode Keystore
         run: |
-          # Görünmez karakter hatalarını önlemek için printf kullanıyoruz
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/otoskor.keystore
 
       - name: Build AAB
         run: |
           cd android
-          # Eski kalıntıları ve kilitli dosyaları temizliyoruz
           rm -rf ~/.gradle/caches/
           chmod +x gradlew
-          # En güncel Gradle sürümüyle uyumlu build komutu
           ./gradlew clean bundleRelease --no-daemon \
             -Dorg.gradle.vfs.watch=false \
             -Pandroid.injected.signing.store.file=otoskor.keystore \
