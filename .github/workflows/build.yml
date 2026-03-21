@@ -19,15 +19,20 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
+    - name: List files (kontrol için)
+      run: |
+        echo "=== Ana dizin içeriği ==="
+        ls -la
+        echo "=== gradlew var mı? ==="
+        ls -la gradlew || echo "gradlew bulunamadı"
+    
     - name: Clean Gradle Cache
       run: |
         rm -rf ~/.gradle/caches/
-        cd android
         chmod +x gradlew
     
     - name: Build Android Bundle
       run: |
-        cd android
         ./gradlew clean bundleRelease --no-daemon \
           -Pandroid.injected.signing.store.file=${{ secrets.KEYSTORE_FILE }} \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
