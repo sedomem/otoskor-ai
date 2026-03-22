@@ -1463,7 +1463,144 @@ function closeM(id){document.getElementById(id).classList.remove('on')}
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/otoskor-ai/sw.js');
 }
-</script>
+
+// ── FCM Push Notification (Capacitor) ──
+async function initPushNotifications(){
+  try {
+    // Capacitor ortamında mı?
+    if(!window.Capacitor) return;
+
+    const { PushNotifications } = await import('https://esm.sh/@capacitor/push-notifications@5.1.1');
+
+    // İzin durumunu kontrol et
+    let permStatus = await PushNotifications.checkPermissions();
+
+    if(permStatus.receive === 'prompt'){
+      permStatus = await PushNotifications.requestPermissions();
+    }
+
+    if(permStatus.receive !== 'granted'){
+      console.log('Push bildirim izni reddedildi');
+      return;
+    }
+
+    // FCM'e kayıt ol
+    await PushNotifications.register();
+
+    // FCM Token al
+    PushNotifications.addListener('registration', token => {
+      console.log('FCM Token:', token.value);
+      window._fcmToken = token.value;
+      // Token'ı Firestore'a kaydet
+      if(window._db && window._auth?.currentUser){
+        const {doc, setDoc} = window._firestoreFns || {};
+        if(doc && setDoc){
+          setDoc(doc(window._db, 'users', window._auth.currentUser.uid), {
+            fcmToken: token.value,
+            updatedAt: new Date()
+          }, {merge: true});
+        }
+      }
+    });
+
+    // Kayıt hatası
+    PushNotifications.addListener('registrationError', err => {
+      console.error('FCM kayıt hatası:', err);
+    });
+
+    // Uygulama AÇIKKEN gelen bildirim (foreground)
+    PushNotifications.addListener('pushNotificationReceived', notification => {
+      console.log('Foreground bildirim:', notification);
+      // Sesli uyarı
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.6);
+      } catch(e){}
+
+      // Uygulama içi banner göster
+      showNotifBanner(
+        notification.title || 'OtoSkor AI',
+        notification.body || '',
+        notification.data
+      );
+    });
+
+    // Bildirime TIKLANDIĞINDA (background/terminated)
+    PushNotifications.addListener('pushNotificationActionPerformed', action => {
+      console.log('Bildirim tıklandı:', action);
+      const data = action.notification.data;
+      handleNotifNavigation(data);
+    });
+
+  } catch(e){
+    console.log('Push notification init hatası:', e);
+  }
+}
+
+// Bildirim banner'ı göster
+function showNotifBanner(title, body, data){
+  const banner = document.createElement('div');
+  banner.style.cssText = `
+    position:fixed;top:60px;left:50%;transform:translateX(-50%);
+    background:#152232;border:1px solid rgba(60,175,246,.35);
+    border-radius:14px;padding:13px 16px;z-index:300;
+    max-width:380px;width:90%;cursor:pointer;
+    box-shadow:0 4px 24px rgba(0,0,0,.5);
+    animation:slideDown .3s ease;
+  `;
+  banner.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <div style="font-size:20px;flex-shrink:0">🔔</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700;color:#e8f4fd;margin-bottom:3px">${title}</div>
+        <div style="font-size:13px;color:#7fb3d3;line-height:1.4">${body}</div>
+      </div>
+      <div style="color:#4a7a9b;font-size:16px;cursor:pointer" onclick="this.closest('div[style]').remove()">✕</div>
+    </div>
+  `;
+  banner.onclick = (e) => {
+    if(e.target.textContent !== '✕'){
+      handleNotifNavigation(data);
+      banner.remove();
+    }
+  };
+
+  // Slide down animasyonu
+  const style = document.createElement('style');
+  style.textContent = '@keyframes slideDown{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}';
+  document.head.appendChild(style);
+
+  document.body.appendChild(banner);
+  setTimeout(() => banner?.remove(), 6000);
+}
+
+// Bildirim navigasyonu — data.page ile yönlendir
+function handleNotifNavigation(data){
+  if(!data) return;
+  const page = data.page || data.screen;
+  if(page){
+    // Desteklenen sayfalar: home, photo, compare, history, settings, premium
+    const validPages = ['home','photo','compare','history','settings','premium'];
+    if(validPages.includes(page)){
+      navigate(page);
+    }
+  }
+  // Kampanya URL'si varsa
+  if(data.url){
+    window.open(data.url, '_blank');
+  }
+}
+
+// Uygulama başlarken FCM'i başlat
+setTimeout(initPushNotifications, 1000);</script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
