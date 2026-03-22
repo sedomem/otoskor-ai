@@ -57,11 +57,11 @@ jobs:
 
           android {
               namespace "com.otoskor.ai"
-              compileSdkVersion 33
+              compileSdkVersion 34
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
-                  targetSdkVersion 33
+                  targetSdkVersion 34
                   versionCode 1
                   versionName "1.0"
               }
