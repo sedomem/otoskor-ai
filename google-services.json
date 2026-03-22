@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "450631287656",
+    "project_id": "otoskor-ai",
+    "storage_bucket": "otoskor-ai.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450631287656:android:d9b8274a3a40ecd55dccdd",
+        "android_client_info": {
+          "package_name": "com.otoskor.ai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk2Q0xYjw5P6-MuMUuFp5fFgcvPdhZSkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
