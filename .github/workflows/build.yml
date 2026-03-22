@@ -118,37 +118,7 @@ jobs:
 
       - name: Add google-services.json
         run: |
-          cat > android/app/google-services.json << 'EOF'
-          {
-            "project_info": {
-              "project_number": "450631287656",
-              "project_id": "otoskor-ai",
-              "storage_bucket": "otoskor-ai.firebasestorage.app"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:450631287656:android:otoskor_android_placeholder",
-                  "android_info": {
-                    "package_name": "com.otoskor.ai"
-                  }
-                },
-                "oauth_client": [],
-                "api_key": [
-                  {
-                    "current_key": "AIzaSyBC7Ftabkk7lUePUqNBfDgcqrU5JqBJ9og"
-                  }
-                ],
-                "services": {
-                  "appinvite_service": {
-                    "other_platform_oauth_client": []
-                  }
-                }
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
+          cp google-services.json android/app/google-services.json
         run: |
           # AndroidX etkinleştir
           echo "android.useAndroidX=true" >> android/gradle.properties
