@@ -52,7 +52,6 @@ jobs:
 
       - name: Create Missing Resources (Splash Screen Fix)
         run: |
-          # Hata veren Theme.SplashScreen temasını manuel oluşturuyoruz
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
@@ -90,8 +89,8 @@ jobs:
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 5
-                  versionName "1.4"
+                  versionCode 6
+                  versionName "1.5"
               }
               signingConfigs {
                   release {
@@ -113,7 +112,7 @@ jobs:
               implementation project(':capacitor-android')
               implementation 'androidx.appcompat:appcompat:1.6.1'
               implementation 'com.google.firebase:firebase-messaging:23.4.0'
-              # Eksik olan Splash Screen kütüphanesini ekledik
+              // Yorum satiri duzeltildi: Diyez yerine cift slash kullanildi
               implementation 'androidx.core:core-splashscreen:1.0.1'
           }
           EOF
