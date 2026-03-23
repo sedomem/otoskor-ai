@@ -1,4 +1,4 @@
-name: Build AAB
+name: Build and Sign AAB
 
 on:
   push:
@@ -34,8 +34,6 @@ jobs:
       - name: Prepare Web Content
         run: |
           mkdir -p www
-          # Klasördeki .html uzantılı dosyayı bul ve index.html olarak kopyala
-          # Bu sayede 'car_analysis_tr (1).html' ismindeki boşluklar sorun yaratmaz
           find . -maxdepth 1 -name "*.html" -exec cp {} www/index.html \;
           cp manifest.json www/ 2>/dev/null || true
 
@@ -48,33 +46,33 @@ jobs:
       - name: Patch Gradle and SDK 35
         run: |
           cd android
-          # Gradle sürümünü 8.4'e zorla
           sed -i 's/gradle-8.0.2-all.zip/gradle-8.4-all.zip/g' gradle/wrapper/gradle-wrapper.properties
-          
-          # Android SDK ve Build araçlarını güncelle
           sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/g' variables.gradle
           sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
           sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
-          
-          # Eksik Splash Screen kütüphanesini ekle
-          sed -i '/dependencies {/a \    implementation "androidx.core:core-splashscreen:1.0.1"' app/build.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-          
-          # Versiyon numarasını yükselt (Play Store uyumu için)
-          sed -i 's/versionCode [0-9]*/versionCode 20/g' app/build.gradle
+          sed -i 's/versionCode [0-9]*/versionCode 21/g' app/build.gradle # Versiyonu 21 yaptık
 
-      - name: Build Android Bundle
+      - name: Build Unsigned AAB
         run: |
           cd android
-          # Keystore ve Google Services (Secrets'tan oku)
-          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
-          printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
-          
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
-      - name: Upload Artifact
+      - name: Sign AAB (BURASI HATAYI ÇÖZECEK)
+        run: |
+          # Keystore dosyasını oluştur
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          
+          # jarsigner ile dosyayı imzala
+          jarsigner -keystore release.keystore \
+            -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
+            -keypass "${{ secrets.KEY_PASSWORD }}" \
+            android/app/build/outputs/bundle/release/app-release.aab \
+            "${{ secrets.KEY_ALIAS }}"
+
+      - name: Upload Signed Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-final-v20
-          path: android/app/build/outputs/bundle/release/*.aab
+          name: otoskor-signed-v21
+          path: android/app/build/outputs/bundle/release/app-release.aab
