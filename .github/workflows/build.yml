@@ -57,74 +57,11 @@ jobs:
           <?xml version="1.0" encoding="utf-8"?>
           <resources>
               <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-                  <item name="colorPrimary">#3D5AFE</item>
-                  <item name="colorPrimaryDark">#303F9F</item>
-                  <item name="colorAccent">#FF4081</item>
+                  <item name="colorPrimary">#3caff6</item>
+                  <item name="colorPrimaryDark">#101b22</item>
+                  <item name="colorAccent">#3caff6</item>
               </style>
-              <style name="Theme.SplashScreen" parent="Theme.SplashScreen.IconClickable">
-                  <item name="windowSplashScreenBackground">#ffffff</item>
-                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme</item>
-              </style>
-          </resources>
-          EOF
-
-      - name: Update Gradle & AGP for API 35
-        run: |
-          cd android
-          ./gradlew wrapper --gradle-version 8.7
-          sed -i 's/com.android.tools.build:gradle:8.0.0/com.android.tools.build:gradle:8.5.0/g' build.gradle
-          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-
-      - name: Overwrite app build.gradle
-        run: |
-          cat > android/app/build.gradle << 'EOF'
-          apply plugin: 'com.android.application'
-          apply plugin: 'com.google.gms.google-services'
-
-          android {
-              namespace "com.otoskor.ai"
-              compileSdkVersion 35
-              defaultConfig {
-                  applicationId "com.otoskor.ai"
-                  minSdkVersion 22
-                  targetSdkVersion 35
-                  versionCode 6
-                  versionName "1.5"
-              }
-              signingConfigs {
-                  release {
-                      storeFile file('/home/runner/otoskor.keystore')
-                      storePassword 'otoskor2024'
-                      keyAlias 'otoskor'
-                      keyPassword 'otoskor2024'
-                  }
-              }
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-
-          dependencies {
-              implementation project(':capacitor-android')
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-              implementation 'com.google.firebase:firebase-messaging:23.4.0'
-              // Yorum satiri duzeltildi: Diyez yerine cift slash kullanildi
-              implementation 'androidx.core:core-splashscreen:1.0.1'
-          }
-          EOF
-
-      - name: Build AAB
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon
-
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: otoskor-release
-          path: android/app/build/outputs/bundle/release/app-release.aab
+              <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+                  <item name="colorPrimary">#3caff6</item>
+                  <item name="colorPrimaryDark">#101b22</item>
+                  <item
