@@ -46,13 +46,13 @@ jobs:
       - name: Build Android Bundle (SDK 35 Final Fix)
         run: |
           cd android
-          # Gradle versiyonunu yükselt
+          # Gradle versiyonunu 8.4'e yükseltiyoruz
           ./gradlew wrapper --gradle-version 8.4
           
-          # SDK 35 uyarılarını bastırmak için gradle.properties dosyasını oluştur
-          echo "android.suppressUnsupportedCompileSdk=35" > gradle.properties
+          # SDK 35 uyumluluk ayarını Shell üzerinden dosyaya yazıyoruz (Gradle içinde değil!)
+          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
           
-          # Hatalı options bloğu kaldırılmış temiz build.gradle
+          # build.gradle dosyasını hatalı 'options' bloğu olmadan yeniden yazıyoruz
           cat > app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
           apply plugin: 'com.google.gms.google-services'
