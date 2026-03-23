@@ -26,54 +26,30 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Capacitor
+      - name: Install Dependencies
         run: |
           npm init -y
           npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4
 
-      - name: Prepare Web Directory
+      - name: Prepare Web Content
         run: |
           mkdir -p www
-          # Ana dizindeki dosyaları www içine kopyalıyoruz
-          cp index.html www/ 2>/dev/null || true
+          cp index.html www/
           cp manifest.json www/ 2>/dev/null || true
           if [ -d "assets" ]; then cp -r assets www/; fi
 
-      - name: Init Capacitor
+      - name: Capacitor Sync
         run: |
           npx cap init "OtoSkor AI" "com.otoskor.ai" --web-dir www
           npx cap add android
           npx cap sync android
 
-      - name: Decode Secrets
+      - name: Secrets & Config
         run: |
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
-      - name: Fix Manifest and Styles
-        run: |
-          sed -i 's/AppTheme.NoActionBarLaunch/Theme.SplashScreen/g' android/app/src/main/AndroidManifest.xml
-          mkdir -p android/app/src/main/res/values
-          cat > android/app/src/main/res/values/styles.xml << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-                  <item name="colorPrimary">#3caff6</item>
-                  <item name="colorPrimaryDark">#101b22</item>
-                  <item name="colorAccent">#3caff6</item>
-              </style>
-              <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-                  <item name="windowActionBar">false</item>
-                  <item name="windowNoTitle">true</item>
-              </style>
-              <style name="Theme.SplashScreen" parent="Theme.SplashScreen.IconBackground">
-                  <item name="windowSplashScreenBackground">#101b22</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
-              </style>
-          </resources>
-          EOF
-
-      - name: Build AAB (Version 12)
+      - name: Build Android Bundle (v12)
         run: |
           cat > android/app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
@@ -87,7 +63,7 @@ jobs:
                   minSdkVersion 22
                   targetSdkVersion 35
                   versionCode 12
-                  versionName "2.2"
+                  versionName "2.2.0"
               }
               signingConfigs {
                   release {
@@ -104,19 +80,16 @@ jobs:
                   }
               }
           }
-
           dependencies {
               implementation project(':capacitor-android')
               implementation 'androidx.appcompat:appcompat:1.6.1'
-              implementation 'com.google.firebase:firebase-messaging:23.4.0'
-              implementation 'androidx.core:core-splashscreen:1.0.1'
           }
           EOF
           cd android
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
-      - name: Upload AAB
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: otoskor-final-v12
