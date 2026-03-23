@@ -36,7 +36,6 @@ jobs:
           mkdir -p www
           cp index.html www/
           cp manifest.json www/ 2>/dev/null || true
-          if [ -d "assets" ]; then cp -r assets www/; fi
 
       - name: Capacitor Sync
         run: |
@@ -44,27 +43,29 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Secrets & Config
+      - name: Build Android Bundle (SDK 35 FIX)
         run: |
-          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
-          printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
-
-      - name: Build Android Bundle (v12)
-        run: |
-          cat > android/app/build.gradle << 'EOF'
+          # Gradle wrapper versiyonunu yükseltiyoruz (SDK 35 desteği için şart)
+          cd android
+          ./gradlew wrapper --gradle-version 8.4
+          
+          # build.gradle dosyasını modern standartlara göre yeniden yazıyoruz
+          cat > app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
           apply plugin: 'com.google.gms.google-services'
 
           android {
               namespace "com.otoskor.ai"
               compileSdkVersion 35
+              
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 12
-                  versionName "2.2.0"
+                  versionCode 15
+                  versionName "2.5.0"
               }
+              
               signingConfigs {
                   release {
                       storeFile file('/home/runner/otoskor.keystore')
@@ -73,24 +74,35 @@ jobs:
                       keyPassword 'otoskor2024'
                   }
               }
+              
               buildTypes {
                   release {
                       minifyEnabled false
                       signingConfig signingConfigs.release
                   }
               }
+              
+              // AAPT2 hata suppressor (SDK 35 uyumluluğu için)
+              options {
+                  printf "android.suppressUnsupportedCompileSdk=35" >> "../gradle.properties"
+              }
           }
+          
           dependencies {
               implementation project(':capacitor-android')
               implementation 'androidx.appcompat:appcompat:1.6.1'
           }
           EOF
-          cd android
+          
+          # Keystore decode
+          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
+          printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+          
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-final-v12
+          name: otoskor-sdk35-v15
           path: android/app/build/outputs/bundle/release/*.aab
