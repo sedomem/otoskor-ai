@@ -26,15 +26,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Prepare web dir
-        run: |
-          mkdir -p www
-          touch www/index.html
-
       - name: Install Capacitor
         run: |
           npm init -y
           npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4
+
+      - name: Prepare Web Directory
+        run: |
+          mkdir -p www
+          # Ana dizindeki dosyaları www içine kopyalıyoruz
+          cp index.html www/ 2>/dev/null || true
+          cp manifest.json www/ 2>/dev/null || true
+          if [ -d "assets" ]; then cp -r assets www/; fi
 
       - name: Init Capacitor
         run: |
@@ -47,11 +50,9 @@ jobs:
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
-      - name: Fix Manifest and Styles (Final Fix)
+      - name: Fix Manifest and Styles
         run: |
-          # Manifest dosyasındaki hatalı tema referansını düzeltiyoruz
           sed -i 's/AppTheme.NoActionBarLaunch/Theme.SplashScreen/g' android/app/src/main/AndroidManifest.xml
-          
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
@@ -72,14 +73,7 @@ jobs:
           </resources>
           EOF
 
-      - name: Update Gradle & AGP for API 35
-        run: |
-          cd android
-          ./gradlew wrapper --gradle-version 8.7
-          sed -i 's/com.android.tools.build:gradle:8.0.0/com.android.tools.build:gradle:8.5.0/g' build.gradle
-          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-
-      - name: Overwrite app build.gradle
+      - name: Build AAB (Version 12)
         run: |
           cat > android/app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
@@ -92,8 +86,8 @@ jobs:
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 10
-                  versionName "1.9"
+                  versionCode 12
+                  versionName "2.2"
               }
               signingConfigs {
                   release {
@@ -118,9 +112,6 @@ jobs:
               implementation 'androidx.core:core-splashscreen:1.0.1'
           }
           EOF
-
-      - name: Build AAB
-        run: |
           cd android
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
@@ -128,5 +119,5 @@ jobs:
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-release
+          name: otoskor-final-v12
           path: android/app/build/outputs/bundle/release/*.aab
