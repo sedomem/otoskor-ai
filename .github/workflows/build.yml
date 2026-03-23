@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '23'
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -51,7 +51,7 @@ jobs:
           sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
           sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-          sed -i 's/versionCode [0-9]*/versionCode 22/g' app/build.gradle
+          sed -i 's/versionCode [0-9]*/versionCode 23/g' app/build.gradle
 
       - name: Build Unsigned AAB
         run: |
