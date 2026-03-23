@@ -43,83 +43,40 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Build Android Bundle (Final Boss Fix)
+      - name: Patch Android Project for SDK 35
         run: |
           cd android
-          # 1. Gradle ve AGP Modernizasyonu
-          ./gradlew wrapper --gradle-version 8.4
+          # 1. SDK Versiyonlarını Güncelle (variables.gradle üzerinden)
+          sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/g' variables.gradle
+          sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
           
-          # 2. Ana build.gradle dosyasını güncelle (AGP 8.2.2 zorunlu)
-          cat > build.gradle << 'EOF'
-          buildscript {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-              dependencies {
-                  classpath 'com.android.tools.build:gradle:8.2.2'
-                  classpath 'com.google.gms:google-services:4.4.1'
-              }
-          }
-          allprojects {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          EOF
+          # 2. Splash Screen hatası için gerekli kütüphaneyi ekle
+          sed -i '/dependencies {/a \    implementation "androidx.core:core-splashscreen:1.0.1"' app/build.gradle
+          
+          # 3. Android Gradle Plugin (AGP) versiyonunu yükselt
+          sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
+          
+          # 4. SDK 35 uyarılarını sustur
+          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
+          
+          # 5. Sürüm Kodunu Güncelle (Google Play kabulü için)
+          sed -i 's/versionCode [0-9]*/versionCode 18/g' app/build.gradle
+          sed -i 's/versionName "[0-9.]*"/versionName "2.8.0"/g' app/build.gradle
 
-          # 3. Uygulama build.gradle dosyasını güncelle
-          cat > app/build.gradle << 'EOF'
-          apply plugin: 'com.android.application'
-          apply plugin: 'com.google.gms.google-services'
-
-          android {
-              namespace "com.otoskor.ai"
-              compileSdkVersion 35
-              buildToolsVersion "35.0.0"
-              
-              defaultConfig {
-                  applicationId "com.otoskor.ai"
-                  minSdkVersion 22
-                  targetSdkVersion 35
-                  versionCode 17
-                  versionName "2.7.0"
-              }
-              
-              signingConfigs {
-                  release {
-                      storeFile file('/home/runner/otoskor.keystore')
-                      storePassword 'otoskor2024'
-                      keyAlias 'otoskor'
-                      keyPassword 'otoskor2024'
-                  }
-              }
-              
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-          
-          dependencies {
-              implementation project(':capacitor-android')
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-          }
-          EOF
-          
-          # 4. Keystore ve Google Services
+      - name: Build Android Bundle
+        run: |
+          cd android
+          # Keystore ve Google Services
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
           
-          # 5. Build Başlat
+          # Gradle Wrapper Güncelle ve Derle
+          ./gradlew wrapper --gradle-version 8.4
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-sdk35-final
+          name: otoskor-v18-fixed
           path: android/app/build/outputs/bundle/release/*.aab
