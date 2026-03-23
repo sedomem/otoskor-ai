@@ -34,7 +34,9 @@ jobs:
       - name: Prepare Web Content
         run: |
           mkdir -p www
-          cp index.html www/
+          # DÜZELTİLMİŞ HTML DOSYASINI BURAYA KOYDUĞUNDAN EMİN OL
+          # Eğer dosya adı farklıysa burayı güncelle
+          cp car_analysis_tr.html www/index.html 
           cp manifest.json www/ 2>/dev/null || true
 
       - name: Capacitor Sync
@@ -43,25 +45,25 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Patch Android Project for SDK 35
+      - name: Patch Gradle and SDK 35
         run: |
           cd android
-          # 1. SDK Versiyonlarını Güncelle (variables.gradle üzerinden)
+          # 1. Gradle Wrapper'ı doğrudan dosya üzerinden 8.4'e yükselt
+          sed -i 's/gradle-8.0.2-all.zip/gradle-8.4-all.zip/g' gradle/wrapper/gradle-wrapper.properties
+          
+          # 2. SDK Versiyonlarını Güncelle
           sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/g' variables.gradle
           sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
           
-          # 2. Splash Screen hatası için gerekli kütüphaneyi ekle
-          sed -i '/dependencies {/a \    implementation "androidx.core:core-splashscreen:1.0.1"' app/build.gradle
-          
-          # 3. Android Gradle Plugin (AGP) versiyonunu yükselt
+          # 3. AGP (Android Gradle Plugin) versiyonunu 8.2.2 yap (SDK 35 desteği için)
           sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
           
-          # 4. SDK 35 uyarılarını sustur
+          # 4. Splash Screen ve SDK 35 Susturucu
+          sed -i '/dependencies {/a \    implementation "androidx.core:core-splashscreen:1.0.1"' app/build.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
           
-          # 5. Sürüm Kodunu Güncelle (Google Play kabulü için)
-          sed -i 's/versionCode [0-9]*/versionCode 18/g' app/build.gradle
-          sed -i 's/versionName "[0-9.]*"/versionName "2.8.0"/g' app/build.gradle
+          # 5. Versiyon Artırımı
+          sed -i 's/versionCode [0-9]*/versionCode 19/g' app/build.gradle
 
       - name: Build Android Bundle
         run: |
@@ -70,13 +72,11 @@ jobs:
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
           
-          # Gradle Wrapper Güncelle ve Derle
-          ./gradlew wrapper --gradle-version 8.4
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-v18-fixed
+          name: otoskor-final-v19
           path: android/app/build/outputs/bundle/release/*.aab
