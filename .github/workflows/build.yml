@@ -1,78 +1,22 @@
-name: Build and Sign AAB
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Dependencies
-        run: |
-          npm init -y
-          npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4
-
-      - name: Prepare Web Content
-        run: |
-          mkdir -p www
-          find . -maxdepth 1 -name "*.html" -exec cp {} www/index.html \;
-          cp manifest.json www/ 2>/dev/null || true
-
-      - name: Capacitor Sync
-        run: |
-          npx cap init "OtoSkor AI" "com.otoskor.ai" --web-dir www
-          npx cap add android
-          npx cap sync android
-
-      - name: Patch Gradle and SDK 35
-        run: |
-          cd android
-          sed -i 's/gradle-8.0.2-all.zip/gradle-8.4-all.zip/g' gradle/wrapper/gradle-wrapper.properties
-          sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/g' variables.gradle
-          sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
-          sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
-          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-          sed -i 's/versionCode [0-9]*/versionCode 21/g' app/build.gradle # Versiyonu 21 yaptık
-
-      - name: Build Unsigned AAB
-        run: |
-          cd android
-          chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon
-
-      - name: Sign AAB (BURASI HATAYI ÇÖZECEK)
+- name: Sign AAB
         run: |
           # Keystore dosyasını oluştur
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
           
-          # jarsigner ile dosyayı imzala
+          # Hata ayıklama için: Alias listesini kontrol et (Opsiyonel, sadece loglarda görmen için)
+          keytool -list -v -keystore release.keystore -storepass "${{ secrets.KEYSTORE_PASSWORD }}"
+          
+          # jarsigner ile imzala (KEY_PASSWORD'ün dolu olduğundan emin ol)
           jarsigner -keystore release.keystore \
             -storepass "${{ secrets.KEYSTORE_PASSWORD }}" \
             -keypass "${{ secrets.KEY_PASSWORD }}" \
+            -digestalg SHA-256 \
+            -sigalg SHA256withRSA \
             android/app/build/outputs/bundle/release/app-release.aab \
             "${{ secrets.KEY_ALIAS }}"
 
       - name: Upload Signed Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-signed-v21
+          name: otoskor-v21-signed
           path: android/app/build/outputs/bundle/release/app-release.aab
