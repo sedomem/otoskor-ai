@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="OtoSkor AI">
     <style>
-        /* Senin mevcut CSS kodların aynen korunmuştur */
+        /* CSS Başlangıcı */
         *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
         :root{--bg:#101b22;--bg2:#152232;--bg3:#1e3348;--pr:#3caff6;--pdim:rgba(60,175,246,.12);--phd:rgba(60,175,246,.22);--tx:#e8f4fd;--mu:#7fb3d3;--dim:#4a7a9b;--gn:#22c55e;--gbg:rgba(34,197,94,.12);--gbr:rgba(34,197,94,.28);--yw:#f59e0b;--ybg:rgba(245,158,11,.12);--ybr:rgba(245,158,11,.28);--rd:#ef4444;--rbg:rgba(239,68,68,.12);--rbr:rgba(239,68,68,.28);--br:rgba(60,175,246,.14);--bh:rgba(60,175,246,.24);--r:14px;--r2:10px;--sb:env(safe-area-inset-bottom,0px)}
         html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a1520;color:var(--tx);font-size:15px}
@@ -24,7 +24,7 @@
         .gbtn{background:var(--bg3);border:1px solid var(--bh);color:var(--tx);padding:13px;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;width:100%}
         .inp{background:var(--bg2);border:1px solid var(--br);color:var(--tx);padding:13px 14px;border-radius:var(--r2);font-size:15px;outline:none;width:100%}
         .bp{width:100%;background:var(--pr);color:var(--bg);border:none;padding:15px;border-radius:var(--r);font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-        /* ... CSS'in devamı ... */
+        /* Buraya önceki CSS'lerinin geri kalanını ekleyebilirsin */
     </style>
 </head>
 <body>
@@ -33,22 +33,54 @@
             <div class="llogo">OtoSkor AI</div>
             <div class="lsub">Türkiye'nin akıllı araç analiz uygulaması</div>
             <div class="atabs">
-                <button class="atab on">Giriş Yap</button>
-                <button class="atab">Kayıt Ol</button>
+                <button class="atab on" onclick="setTab('in')">Giriş Yap</button>
+                <button class="atab" onclick="setTab('up')">Kayıt Ol</button>
             </div>
             <div class="lform">
-                <button class="gbtn">👤 Misafir Olarak Devam Et</button>
-                <input class="inp" type="email" placeholder="E-posta">
-                <input class="inp" type="password" placeholder="Şifre">
-                <button class="bp">Giriş Yap</button>
+                <button class="gbtn" onclick="guestLogin()">👤 Misafir Olarak Devam Et</button>
+                <input class="inp" type="email" id="email" placeholder="E-posta">
+                <input class="inp" type="password" id="pass" placeholder="Şifre">
+                <button class="bp" onclick="mainLogin()">Giriş Yap</button>
             </div>
         </div>
     </div>
 
+    <div class="app" id="mainApp" style="display:none">
+        <div style="padding:20px; text-align:center;">
+            <h2 style="color:var(--pr)">Hoş Geldiniz!</h2>
+            <p>Uygulama başarıyla yüklendi.</p>
+            <br>
+            <button class="bp" onclick="location.reload()">Çıkış Yap</button>
+        </div>
+    </div>
+
     <script src="capacitor.js"></script>
+
     <script>
-        // JS Kodlarını buraya ekleyebilirsin veya ayrı dosyadaysa onu da kopyalamalıyız
-        console.log("OtoSkor AI Hazır!");
+        // Sayfa Değiştirme Fonksiyonları
+        function guestLogin() {
+            document.getElementById('loginApp').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'flex';
+            console.log("Misafir girişi yapıldı");
+        }
+
+        function mainLogin() {
+            const em = document.getElementById('email').value;
+            if(em) {
+                guestLogin();
+            } else {
+                alert("Lütfen e-posta girin");
+            }
+        }
+
+        function setTab(type) {
+            console.log("Sekme değiştirildi: " + type);
+        }
+
+        // Uygulama Başlatma
+        window.onload = () => {
+            console.log("OtoSkor AI Hazır!");
+        };
     </script>
 </body>
 </html>
