@@ -34,8 +34,9 @@ jobs:
       - name: Prepare Web Content
         run: |
           mkdir -p www
-          # DOSYA ADI BURADA DÜZELTİLDİ: Boşluk ve parantez olduğu için tırnak içine alındı
-          cp "car_analysis_tr (1).html" www/index.html 
+          # Klasördeki .html uzantılı dosyayı bul ve index.html olarak kopyala
+          # Bu sayede 'car_analysis_tr (1).html' ismindeki boşluklar sorun yaratmaz
+          find . -maxdepth 1 -name "*.html" -exec cp {} www/index.html \;
           cp manifest.json www/ 2>/dev/null || true
 
       - name: Capacitor Sync
@@ -47,27 +48,25 @@ jobs:
       - name: Patch Gradle and SDK 35
         run: |
           cd android
-          # Gradle Wrapper'ı 8.4'e yükselt
+          # Gradle sürümünü 8.4'e zorla
           sed -i 's/gradle-8.0.2-all.zip/gradle-8.4-all.zip/g' gradle/wrapper/gradle-wrapper.properties
           
-          # SDK Versiyonlarını 35 yap
+          # Android SDK ve Build araçlarını güncelle
           sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/g' variables.gradle
           sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
-          
-          # AGP (Android Gradle Plugin) versiyonunu 8.2.2 yap
           sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
           
-          # Splash Screen bağımlılığını ekle ve SDK 35 uyarısını sustur
+          # Eksik Splash Screen kütüphanesini ekle
           sed -i '/dependencies {/a \    implementation "androidx.core:core-splashscreen:1.0.1"' app/build.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
           
-          # Sürüm kodunu artır
+          # Versiyon numarasını yükselt (Play Store uyumu için)
           sed -i 's/versionCode [0-9]*/versionCode 20/g' app/build.gradle
 
       - name: Build Android Bundle
         run: |
           cd android
-          # Keystore ve Google Services (Secrets üzerinden)
+          # Keystore ve Google Services (Secrets'tan oku)
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
           
@@ -77,5 +76,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-v20-final
+          name: otoskor-final-v20
           path: android/app/build/outputs/bundle/release/*.aab
