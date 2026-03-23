@@ -23,13 +23,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/
+          cp index.html www/ 2>/dev/null || true
           cp manifest.json www/ 2>/dev/null || true
           cp sw.js www/ 2>/dev/null || true
           cp icon-192.png www/ 2>/dev/null || true
@@ -37,7 +34,7 @@ jobs:
       - name: Install Capacitor
         run: |
           npm init -y
-          npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4 @capacitor/push-notifications@5.1.1
+          npm install @capacitor/core@5.7.4 @capacitor/cli@5.7.4 @capacitor/android@5.7.4
 
       - name: Init Capacitor
         run: |
@@ -45,15 +42,18 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Decode Keystore
+      - name: Decode Secrets
         run: |
-          # printf kullanarak invalid input hatasını engelliyoruz
+          # Keystore'u çözüyoruz
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
+          # Google Services dosyasını direkt secret'tan oluşturuyoruz
+          printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
       - name: Overwrite app build.gradle
         run: |
           cat > android/app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
+          apply plugin: 'com.google.gms.google-services'
 
           android {
               namespace "com.otoskor.ai"
@@ -62,8 +62,8 @@ jobs:
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 2
-                  versionName "1.1"
+                  versionCode 3
+                  versionName "1.2"
               }
               signingConfigs {
                   release {
@@ -79,27 +79,20 @@ jobs:
                       signingConfig signingConfigs.release
                   }
               }
-              configurations.all {
-                  resolutionStrategy {
-                      force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-                  }
-              }
           }
 
           dependencies {
-              implementation fileTree(include: ['*.jar'], dir: 'libs')
               implementation project(':capacitor-android')
-              implementation 'androidx.core:core-splashscreen:1.0.1'
               implementation 'androidx.appcompat:appcompat:1.6.1'
               implementation 'com.google.firebase:firebase-messaging:23.4.0'
           }
-
-          apply plugin: 'com.google.gms.google-services'
           EOF
 
-      - name: Build AAB
+      - name: Fix API 35 Warning & Build
         run: |
           cd android
+          # API 35 uyumluluk uyarısını susturuyoruz
+          echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
           chmod +x gradlew
           ./gradlew bundleRelease --no-daemon
 
