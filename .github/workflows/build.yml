@@ -29,10 +29,7 @@ jobs:
       - name: Prepare web dir
         run: |
           mkdir -p www
-          cp index.html www/ 2>/dev/null || true
-          cp manifest.json www/ 2>/dev/null || true
-          cp sw.js www/ 2>/dev/null || true
-          cp icon-192.png www/ 2>/dev/null || true
+          touch www/index.html
 
       - name: Install Capacitor
         run: |
@@ -50,8 +47,11 @@ jobs:
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
 
-      - name: Create Missing Resources (Splash Screen Fix)
+      - name: Fix Manifest and Styles (Final Fix)
         run: |
+          # Manifest dosyasındaki hatalı tema referansını düzeltiyoruz
+          sed -i 's/AppTheme.NoActionBarLaunch/Theme.SplashScreen/g' android/app/src/main/AndroidManifest.xml
+          
           mkdir -p android/app/src/main/res/values
           cat > android/app/src/main/res/values/styles.xml << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
@@ -62,9 +62,6 @@ jobs:
                   <item name="colorAccent">#3caff6</item>
               </style>
               <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-                  <item name="colorPrimary">#3caff6</item>
-                  <item name="colorPrimaryDark">#101b22</item>
-                  <item name="colorAccent">#3caff6</item>
                   <item name="windowActionBar">false</item>
                   <item name="windowNoTitle">true</item>
               </style>
@@ -95,8 +92,8 @@ jobs:
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 8
-                  versionName "1.7"
+                  versionCode 9
+                  versionName "1.8"
               }
               signingConfigs {
                   release {
@@ -132,4 +129,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: otoskor-release
-          path: "**/*.aab"
+          path: android/app/build/outputs/bundle/release/*.aab
