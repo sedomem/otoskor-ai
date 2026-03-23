@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -47,8 +47,8 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
-          echo "Keystore size: $(wc -c < /home/runner/otoskor.keystore) bytes"
+          # printf kullanarak invalid input hatasını engelliyoruz
+          printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
 
       - name: Overwrite app build.gradle
         run: |
@@ -57,13 +57,13 @@ jobs:
 
           android {
               namespace "com.otoskor.ai"
-              compileSdkVersion 34
+              compileSdkVersion 35
               defaultConfig {
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
-                  targetSdkVersion 34
-                  versionCode 1
-                  versionName "1.0"
+                  targetSdkVersion 35
+                  versionCode 2
+                  versionName "1.1"
               }
               signingConfigs {
                   release {
@@ -82,78 +82,19 @@ jobs:
               configurations.all {
                   resolutionStrategy {
                       force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
-                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22'
-                      force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
                   }
-              }
-          }
-
-          repositories {
-              flatDir {
-                  dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
               }
           }
 
           dependencies {
               implementation fileTree(include: ['*.jar'], dir: 'libs')
               implementation project(':capacitor-android')
-              implementation project(':capacitor-cordova-android-plugins')
               implementation 'androidx.core:core-splashscreen:1.0.1'
               implementation 'androidx.appcompat:appcompat:1.6.1'
-              implementation 'androidx.webkit:webkit:1.8.0'
               implementation 'com.google.firebase:firebase-messaging:23.4.0'
-              implementation 'com.google.firebase:firebase-analytics:21.5.0'
           }
 
           apply plugin: 'com.google.gms.google-services'
-          EOF
-
-      - name: Add google-services plugin to root build.gradle
-        run: |
-          if ! grep -q "google-services" android/build.gradle; then
-            sed -i '/dependencies {/a\        classpath "com.google.gms:google-services:4.4.1"' android/build.gradle
-          fi
-
-      - name: Setup AndroidX and copy resources
-        run: |
-          cp google-services.json android/app/google-services.json
-          echo "android.useAndroidX=true" >> android/gradle.properties
-          echo "android.enableJetifier=true" >> android/gradle.properties
-          mkdir -p android/app/src/main/res/values
-          cat > android/app/src/main/res/values/styles.xml << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-                  <item name="colorPrimary">@color/colorPrimary</item>
-                  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-                  <item name="colorAccent">@color/colorAccent</item>
-              </style>
-              <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-                  <item name="colorPrimary">@color/colorPrimary</item>
-                  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-                  <item name="colorAccent">@color/colorAccent</item>
-                  <item name="windowActionBar">false</item>
-                  <item name="windowNoTitle">true</item>
-              </style>
-              <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-                  <item name="windowSplashScreenBackground">#101b22</item>
-                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
-              </style>
-              <style name="Theme.SplashScreen" parent="Theme.SplashScreen.IconBackground">
-                  <item name="windowSplashScreenBackground">#101b22</item>
-                  <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-                  <item name="postSplashScreenTheme">@style/AppTheme</item>
-              </style>
-          </resources>
-          EOF
-          cat > android/app/src/main/res/values/colors.xml << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-              <color name="colorPrimary">#3caff6</color>
-              <color name="colorPrimaryDark">#101b22</color>
-              <color name="colorAccent">#3caff6</color>
-          </resources>
           EOF
 
       - name: Build AAB
@@ -167,4 +108,3 @@ jobs:
         with:
           name: otoskor-release
           path: android/app/build/outputs/bundle/release/app-release.aab
-          retention-days: 7
