@@ -43,13 +43,16 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Build Android Bundle (SDK 35 FIX)
+      - name: Build Android Bundle (SDK 35 Final Fix)
         run: |
-          # Gradle wrapper versiyonunu yükseltiyoruz (SDK 35 desteği için şart)
           cd android
+          # Gradle versiyonunu yükselt
           ./gradlew wrapper --gradle-version 8.4
           
-          # build.gradle dosyasını modern standartlara göre yeniden yazıyoruz
+          # SDK 35 uyarılarını bastırmak için gradle.properties dosyasını oluştur
+          echo "android.suppressUnsupportedCompileSdk=35" > gradle.properties
+          
+          # Hatalı options bloğu kaldırılmış temiz build.gradle
           cat > app/build.gradle << 'EOF'
           apply plugin: 'com.android.application'
           apply plugin: 'com.google.gms.google-services'
@@ -62,8 +65,8 @@ jobs:
                   applicationId "com.otoskor.ai"
                   minSdkVersion 22
                   targetSdkVersion 35
-                  versionCode 15
-                  versionName "2.5.0"
+                  versionCode 16
+                  versionName "2.6.0"
               }
               
               signingConfigs {
@@ -81,11 +84,6 @@ jobs:
                       signingConfig signingConfigs.release
                   }
               }
-              
-              // AAPT2 hata suppressor (SDK 35 uyumluluğu için)
-              options {
-                  printf "android.suppressUnsupportedCompileSdk=35" >> "../gradle.properties"
-              }
           }
           
           dependencies {
@@ -94,7 +92,7 @@ jobs:
           }
           EOF
           
-          # Keystore decode
+          # Keystore ve Google Services hazırlığı
           printf "%s" "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > /home/runner/otoskor.keystore
           printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
           
@@ -104,5 +102,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-sdk35-v15
+          name: otoskor-v16-final
           path: android/app/build/outputs/bundle/release/*.aab
