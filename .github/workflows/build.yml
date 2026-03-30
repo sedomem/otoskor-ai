@@ -57,7 +57,7 @@ jobs:
           sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/g' variables.gradle
           sed -i 's/com.android.tools.build:gradle:[0-9.]*/com.android.tools.build:gradle:8.2.2/g' build.gradle
           echo "android.suppressUnsupportedCompileSdk=35" >> gradle.properties
-          sed -i 's/versionCode [0-9]*/versionCode 25/g' app/build.gradle
+          sed -i 's/versionCode [0-9]*/versionCode 26/g' app/build.gradle
 
       - name: Add Firebase dependency to build.gradle
         run: |
@@ -92,5 +92,5 @@ jobs:
       - name: Upload Signed Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: otoskor-v25-signed
+          name: otoskor-v26-signed
           path: android/app/build/outputs/bundle/release/app-release.aab
